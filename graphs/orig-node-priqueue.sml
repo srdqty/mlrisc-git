@@ -110,7 +110,7 @@ struct
 
        val _ = make_heap((N+1) div 2)
 
-       val _ = A.appi (fn (i,x) => A.update(pos,x,i)) heap
+       val _ = A.appi (fn (i,x) => A.update(pos,x,i)) (heap,0,NONE)
 
    in  Q{ less = less, heap = heap, pos = pos, size = ref N } 
    end
