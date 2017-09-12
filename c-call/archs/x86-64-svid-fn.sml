@@ -75,7 +75,7 @@ functor X86_64SVIDFn (
     val calleeSaveRegs = [C.rbx, C.r12, C.r13, C.r14, C.r15]
     val callerSaveRegs =  [C.rax, C.rcx, C.rdx, C.rsi, C.rdi, C.r8, C.r9, C.r10, C.r11]
     val callerSaveFRegs = (C.Regs CB.FP {from=0, to=15, step=1})
-    val calleeSaveFRegs = []
+    val calleeSaveFRegs : T.reg list = []
 			  
     val frameAlignB = 16
 

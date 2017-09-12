@@ -37,9 +37,10 @@
  * -- Allen Leung (leunga@cs.nyu.edu)
  *)
 
-functor RegisterAllocator
-   (SpillHeuristics : RA_SPILL_HEURISTICS) 
-   (Flowgraph : RA_FLOWGRAPH where C = CellsBasis) : RA =
+functor RegisterAllocator (
+   structure SpillHeuristics : RA_SPILL_HEURISTICS
+   structure Flowgraph : RA_FLOWGRAPH (* where C = CellsBasis *)
+) : RA =
 struct
 
    structure F      = Flowgraph

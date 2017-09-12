@@ -11,7 +11,10 @@ signature RA_GRAPH =
 sig
 
   structure C : CELLS_BASIS
-  structure BM : RA_BITMATRIX = RaBitmatrix
+  structure BM : RA_BITMATRIX (* = RaBitmatrix *)
+                 where type bitMatrix = RaBitmatrix.bitMatrix
+                   and type bucket = RaBitmatrix.bucket
+                   and type hashTable = RaBitmatrix.hashTable
   (*
    * The following are the data structures used in the register allocator.
    *)

@@ -9,9 +9,23 @@ sig
    structure I : INSTRUCTIONS
    structure C : CELLS
    structure F : RA_FLOWGRAPH 
-      sharing F.I   = I
-      sharing I.C   = C
-   structure CB : CELLS_BASIS = CellsBasis
+      (* sharing F.I = I *)
+     where type I.addressing_mode = I.addressing_mode
+       and type I.ea = I.ea
+       and type I.instr = I.instr
+       and type I.instruction = I.instruction
+       and type I.operand = I.operand
+      (* sharing I.C = C *)
+   structure CB : CELLS_BASIS (* = CellsBasis *)
+                  where type CellSet.cellset = CellsBasis.CellSet.cellset
+                    and type 'a ColorTable.hash_table = 'a CellsBasis.ColorTable.hash_table
+                    and type 'a HashTable.hash_table = 'a CellsBasis.HashTable.hash_table
+                    and type SortedCells.sorted_cells = CellsBasis.SortedCells.sorted_cells
+                    and type cell = CellsBasis.cell
+                    and type cellColor = CellsBasis.cellColor
+                    and type cellkind = CellsBasis.cellkind
+                    and type cellkindDesc = CellsBasis.cellkindDesc
+                    and type cellkindInfo = CellsBasis.cellkindInfo
 
    type getreg = { pref  : CB.cell_id list,
                    stamp : int, 

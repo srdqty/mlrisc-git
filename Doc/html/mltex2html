@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl
+#!/usr/bin/perl
 #
 # This tool generates HTML pages in my own format given a stylized Latex file.
 #

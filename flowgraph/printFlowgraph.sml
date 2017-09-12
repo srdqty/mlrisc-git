@@ -5,9 +5,33 @@
 signature PRINT_FLOWGRAPH = 
 sig
    structure Asm : INSTRUCTION_EMITTER
-   structure CFG : CONTROL_FLOW_GRAPH
-		      where I = Asm.I 
-			and P = Asm.S.P
+   structure CFG : CONTROL_FLOW_GRAPH (* where I = Asm.I and P = Asm.S.P *)
+                   where type I.addressing_mode = Asm.I.addressing_mode
+                     and type I.ea = Asm.I.ea
+                     and type I.instr = Asm.I.instr
+                     and type I.instruction = Asm.I.instruction
+                     and type I.operand = Asm.I.operand
+                   where type P.Client.pseudo_op = Asm.S.P.Client.pseudo_op
+                     and type P.T.Basis.cond = Asm.S.P.T.Basis.cond
+                     and type P.T.Basis.div_rounding_mode = Asm.S.P.T.Basis.div_rounding_mode
+                     and type P.T.Basis.ext = Asm.S.P.T.Basis.ext
+                     and type P.T.Basis.fcond = Asm.S.P.T.Basis.fcond
+                     and type P.T.Basis.rounding_mode = Asm.S.P.T.Basis.rounding_mode
+                     and type P.T.Constant.const = Asm.S.P.T.Constant.const
+                     and type ('s,'r,'f,'c) P.T.Extension.ccx = ('s,'r,'f,'c) Asm.S.P.T.Extension.ccx
+                     and type ('s,'r,'f,'c) P.T.Extension.fx = ('s,'r,'f,'c) Asm.S.P.T.Extension.fx
+                     and type ('s,'r,'f,'c) P.T.Extension.rx = ('s,'r,'f,'c) Asm.S.P.T.Extension.rx
+                     and type ('s,'r,'f,'c) P.T.Extension.sx = ('s,'r,'f,'c) Asm.S.P.T.Extension.sx
+                     and type P.T.I.div_rounding_mode = Asm.S.P.T.I.div_rounding_mode
+                     and type P.T.Region.region = Asm.S.P.T.Region.region
+                     and type P.T.ccexp = Asm.S.P.T.ccexp
+                     and type P.T.fexp = Asm.S.P.T.fexp
+                     (* and type P.T.labexp = Asm.S.P.T.labexp *)
+                     and type P.T.mlrisc = Asm.S.P.T.mlrisc
+                     and type P.T.oper = Asm.S.P.T.oper
+                     and type P.T.rep = Asm.S.P.T.rep
+                     and type P.T.rexp = Asm.S.P.T.rexp
+                     and type P.T.stm = Asm.S.P.T.stm
 
    val printCFG : TextIO.outstream -> string -> CFG.cfg -> unit
 end
@@ -15,9 +39,33 @@ end
 
 functor PrintFlowgraph 
    (structure Asm : INSTRUCTION_EMITTER
-    structure CFG : CONTROL_FLOW_GRAPH
-		    where I = Asm.I
-		      and P = Asm.S.P
+    structure CFG : CONTROL_FLOW_GRAPH (* where I = Asm.I and P = Asm.S.P *)
+                    where type I.addressing_mode = Asm.I.addressing_mode
+                      and type I.ea = Asm.I.ea
+                      and type I.instr = Asm.I.instr
+                      and type I.instruction = Asm.I.instruction
+                      and type I.operand = Asm.I.operand
+                    where type P.Client.pseudo_op = Asm.S.P.Client.pseudo_op
+                      and type P.T.Basis.cond = Asm.S.P.T.Basis.cond
+                      and type P.T.Basis.div_rounding_mode = Asm.S.P.T.Basis.div_rounding_mode
+                      and type P.T.Basis.ext = Asm.S.P.T.Basis.ext
+                      and type P.T.Basis.fcond = Asm.S.P.T.Basis.fcond
+                      and type P.T.Basis.rounding_mode = Asm.S.P.T.Basis.rounding_mode
+                      and type P.T.Constant.const = Asm.S.P.T.Constant.const
+                      and type ('s,'r,'f,'c) P.T.Extension.ccx = ('s,'r,'f,'c) Asm.S.P.T.Extension.ccx
+                      and type ('s,'r,'f,'c) P.T.Extension.fx = ('s,'r,'f,'c) Asm.S.P.T.Extension.fx
+                      and type ('s,'r,'f,'c) P.T.Extension.rx = ('s,'r,'f,'c) Asm.S.P.T.Extension.rx
+                      and type ('s,'r,'f,'c) P.T.Extension.sx = ('s,'r,'f,'c) Asm.S.P.T.Extension.sx
+                      and type P.T.I.div_rounding_mode = Asm.S.P.T.I.div_rounding_mode
+                      and type P.T.Region.region = Asm.S.P.T.Region.region
+                      and type P.T.ccexp = Asm.S.P.T.ccexp
+                      and type P.T.fexp = Asm.S.P.T.fexp
+                      (* and type P.T.labexp = Asm.S.P.T.labexp *)
+                      and type P.T.mlrisc = Asm.S.P.T.mlrisc
+                      and type P.T.oper = Asm.S.P.T.oper
+                      and type P.T.rep = Asm.S.P.T.rep
+                      and type P.T.rexp = Asm.S.P.T.rexp
+                      and type P.T.stm = Asm.S.P.T.stm
    ) : PRINT_FLOWGRAPH =
 struct
    structure Asm = Asm

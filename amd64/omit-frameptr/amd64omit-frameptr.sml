@@ -10,9 +10,51 @@
  *)
 functor AMD64OmitFramePointer (
     structure I : AMD64INSTR 
-    structure CFG : CONTROL_FLOW_GRAPH where I = I): OMIT_FRAME_POINTER = 
+    structure CFG : CONTROL_FLOW_GRAPH (* where I = I *)
+                    where type I.addressing_mode = I.addressing_mode
+                      and type I.ea = I.ea
+                      and type I.instr = I.instr
+                      and type I.instruction = I.instruction
+                      and type I.operand = I.operand): OMIT_FRAME_POINTER = 
 (*
-    structure MemRegs : MEMORY_REGISTERS where I=I
+    structure MemRegs : MEMORY_REGISTERS (* where I = I *)
+                        where type I.Constant.const = I.Constant.const
+                          and type I.Region.region = I.Region.region
+                          and type I.T.Basis.cond = I.T.Basis.cond
+                          and type I.T.Basis.div_rounding_mode = I.T.Basis.div_rounding_mode
+                          and type I.T.Basis.ext = I.T.Basis.ext
+                          and type I.T.Basis.fcond = I.T.Basis.fcond
+                          and type I.T.Basis.rounding_mode = I.T.Basis.rounding_mode
+                          and type ('s,'r,'f,'c) I.T.Extension.ccx = ('s,'r,'f,'c) I.T.Extension.ccx
+                          and type ('s,'r,'f,'c) I.T.Extension.fx = ('s,'r,'f,'c) I.T.Extension.fx
+                          and type ('s,'r,'f,'c) I.T.Extension.rx = ('s,'r,'f,'c) I.T.Extension.rx
+                          and type ('s,'r,'f,'c) I.T.Extension.sx = ('s,'r,'f,'c) I.T.Extension.sx
+                          and type I.T.I.div_rounding_mode = I.T.I.div_rounding_mode
+                          and type I.T.ccexp = I.T.ccexp
+                          and type I.T.fexp = I.T.fexp
+                          (* and type I.T.labexp = I.T.labexp *)
+                          and type I.T.mlrisc = I.T.mlrisc
+                          and type I.T.oper = I.T.oper
+                          and type I.T.rep = I.T.rep
+                          and type I.T.rexp = I.T.rexp
+                          and type I.T.stm = I.T.stm
+                          (* and type I.addressing_mode = I.addressing_mode *)
+                          and type I.binaryOp = I.binaryOp
+                          and type I.bitOp = I.bitOp
+                          and type I.cond = I.cond
+                          and type I.fbinOp = I.fbinOp
+                          and type I.fenvOp = I.fenvOp
+                          and type I.fibinOp = I.fibinOp
+                          and type I.fsize = I.fsize
+                          and type I.funOp = I.funOp
+                          and type I.instr = I.instr
+                          and type I.instruction = I.instruction
+                          and type I.isize = I.isize
+                          and type I.move = I.move
+                          and type I.multDivOp = I.multDivOp
+                          and type I.operand = I.operand
+                          and type I.shiftOp = I.shiftOp
+                          and type I.unaryOp = I.unaryOp
     val memRegBase : CellsBasis.cell option
 *)
 struct

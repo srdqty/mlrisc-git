@@ -4,10 +4,18 @@
  *)
 functor CFGCountCopies
    ( structure CFG : CONTROL_FLOW_GRAPH
-     structure InsnProps : INSN_PROPERTIES
-     		where I = CFG.I
-     structure SdiJumps : SDI_JUMPS
-     		where I = CFG.I
+     structure InsnProps : INSN_PROPERTIES (* where I = CFG.I *)
+                           where type I.addressing_mode = CFG.I.addressing_mode
+                             and type I.ea = CFG.I.ea
+                             and type I.instr = CFG.I.instr
+                             and type I.instruction = CFG.I.instruction
+                             and type I.operand = CFG.I.operand
+     structure SdiJumps : SDI_JUMPS (* where I = CFG.I *)
+                          where type I.addressing_mode = CFG.I.addressing_mode
+                            and type I.ea = CFG.I.ea
+                            and type I.instr = CFG.I.instr
+                            and type I.instruction = CFG.I.instruction
+                            and type I.operand = CFG.I.operand
     ) : CFG_OPTIMIZATION =
 struct
    structure CFG = CFG

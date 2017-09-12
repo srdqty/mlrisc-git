@@ -7,7 +7,7 @@ signature INSN_PROPERTIES =
 sig
    structure I : INSTRUCTIONS
    structure C : CELLS
-     sharing I.C = C
+     (* sharing I.C = C *)
 
       (* classify instructions *)
    datatype kind = IK_JUMP   (* branches, including returns *)

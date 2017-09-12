@@ -1,6 +1,11 @@
 functor SparcDelaySlots
    (structure I : SPARCINSTR
-    structure P : INSN_PROPERTIES where I = I
+    structure P : INSN_PROPERTIES (* where I = I *)
+                  where type I.addressing_mode = I.addressing_mode
+                    and type I.ea = I.ea
+                    and type I.instr = I.instr
+                    and type I.instruction = I.instruction
+                    and type I.operand = I.operand
     (* sharing/defn conflict:   sharing P.I = I*)
    ) : DELAY_SLOT_PROPERTIES =
 struct

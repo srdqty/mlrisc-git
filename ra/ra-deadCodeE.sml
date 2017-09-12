@@ -6,9 +6,9 @@
  * -- Allen
  *)
 
-functor RADeadCodeElim
-   (Flowgraph : RA_FLOWGRAPH)
-   (  (* check for dead code on these cellkinds only *)
+functor RADeadCodeElim (
+    structure Flowgraph : RA_FLOWGRAPH
+      (* check for dead code on these cellkinds only *)
     val cellkind : CellsBasis.cellkind -> bool
       (* Dead registers are stored here. *)
     val deadRegs : bool IntHashTable.hash_table 

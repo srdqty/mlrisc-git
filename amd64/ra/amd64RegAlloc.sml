@@ -6,15 +6,51 @@
 functor AMD64RegAlloc (
       structure I : AMD64INSTR
       structure SpillHeur : RA_SPILL_HEURISTICS 
-      structure Props : AMD64INSN_PROPERTIES
-          where I = I
-      structure CFG : CONTROL_FLOW_GRAPH
-          where I = I
-      structure Spill : RA_SPILL
-          where I = I
-      structure Asm : INSTRUCTION_EMITTER
-          where I = I
-          and   S.P = CFG.P
+      structure Props : AMD64INSN_PROPERTIES (* where I = I *)
+                        where type I.addressing_mode = I.addressing_mode
+                          and type I.ea = I.ea
+                          and type I.instr = I.instr
+                          and type I.instruction = I.instruction
+                          and type I.operand = I.operand
+      structure CFG : CONTROL_FLOW_GRAPH (* where I = I *)
+                      where type I.addressing_mode = I.addressing_mode
+                        and type I.ea = I.ea
+                        and type I.instr = I.instr
+                        and type I.instruction = I.instruction
+                        and type I.operand = I.operand
+      structure Spill : RA_SPILL (* where I = I *)
+                      where type I.addressing_mode = I.addressing_mode
+                        and type I.ea = I.ea
+                        and type I.instr = I.instr
+                        and type I.instruction = I.instruction
+                        and type I.operand = I.operand
+      structure Asm : INSTRUCTION_EMITTER (* where I = I and S.P = CFG.P *)
+                           where type I.addressing_mode = I.addressing_mode
+                             and type I.ea = I.ea
+                             and type I.instr = I.instr
+                             and type I.instruction = I.instruction
+                             and type I.operand = I.operand
+                           where type S.P.Client.pseudo_op = CFG.P.Client.pseudo_op
+                             and type S.P.T.Basis.cond = CFG.P.T.Basis.cond
+                             and type S.P.T.Basis.div_rounding_mode = CFG.P.T.Basis.div_rounding_mode
+                             and type S.P.T.Basis.ext = CFG.P.T.Basis.ext
+                             and type S.P.T.Basis.fcond = CFG.P.T.Basis.fcond
+                             and type S.P.T.Basis.rounding_mode = CFG.P.T.Basis.rounding_mode
+                             and type S.P.T.Constant.const = CFG.P.T.Constant.const
+                             and type ('s,'r,'f,'c) S.P.T.Extension.ccx = ('s,'r,'f,'c) CFG.P.T.Extension.ccx
+                             and type ('s,'r,'f,'c) S.P.T.Extension.fx = ('s,'r,'f,'c) CFG.P.T.Extension.fx
+                             and type ('s,'r,'f,'c) S.P.T.Extension.rx = ('s,'r,'f,'c) CFG.P.T.Extension.rx
+                             and type ('s,'r,'f,'c) S.P.T.Extension.sx = ('s,'r,'f,'c) CFG.P.T.Extension.sx
+                             and type S.P.T.I.div_rounding_mode = CFG.P.T.I.div_rounding_mode
+                             and type S.P.T.Region.region = CFG.P.T.Region.region
+                             and type S.P.T.ccexp = CFG.P.T.ccexp
+                             and type S.P.T.fexp = CFG.P.T.fexp
+                             (* and type S.P.T.labexp = CFG.P.T.labexp *)
+                             and type S.P.T.mlrisc = CFG.P.T.mlrisc
+                             and type S.P.T.oper = CFG.P.T.oper
+                             and type S.P.T.rep = CFG.P.T.rep
+                             and type S.P.T.rexp = CFG.P.T.rexp
+                             and type S.P.T.stm = CFG.P.T.stm
 
       type spill_info
       datatype spill_operand_kind = SPILL_LOC 
@@ -138,17 +174,16 @@ functor AMD64RegAlloc (
     (* use the standard register allocator *)
     structure RA = 
         RegisterAllocator
-          (SpillHeur)
-          (MemoryRA
+          (structure SpillHeuristics = SpillHeur
+           structure Flowgraph = MemoryRA
              (RADeadCodeElim
-                (ClusterRA
+                (structure Flowgraph = ClusterRA
                    (structure Flowgraph = CFG
                     structure Asm = Asm
                     structure InsnProps = Props
                     structure Spill = Spill
                    )
-                 )
-                (fun cellkind CB.GP = true
+                 fun cellkind CB.GP = true
 		   | cellkind CB.FP = true
 		   | cellkind _ = false 
                  val deadRegs = deadRegs

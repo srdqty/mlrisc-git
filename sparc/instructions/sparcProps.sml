@@ -5,8 +5,48 @@
 
 functor SparcProps
   (structure SparcInstr : SPARCINSTR
-   structure MLTreeEval : MLTREE_EVAL where T = SparcInstr.T
-   structure MLTreeHash : MLTREE_HASH where T = SparcInstr.T
+   structure MLTreeEval : MLTREE_EVAL (* where T = SparcInstr.T *)
+                          where type T.Basis.cond = SparcInstr.T.Basis.cond
+                            and type T.Basis.div_rounding_mode = SparcInstr.T.Basis.div_rounding_mode
+                            and type T.Basis.ext = SparcInstr.T.Basis.ext
+                            and type T.Basis.fcond = SparcInstr.T.Basis.fcond
+                            and type T.Basis.rounding_mode = SparcInstr.T.Basis.rounding_mode
+                            and type T.Constant.const = SparcInstr.T.Constant.const
+                            and type ('s,'r,'f,'c) T.Extension.ccx = ('s,'r,'f,'c) SparcInstr.T.Extension.ccx
+                            and type ('s,'r,'f,'c) T.Extension.fx = ('s,'r,'f,'c) SparcInstr.T.Extension.fx
+                            and type ('s,'r,'f,'c) T.Extension.rx = ('s,'r,'f,'c) SparcInstr.T.Extension.rx
+                            and type ('s,'r,'f,'c) T.Extension.sx = ('s,'r,'f,'c) SparcInstr.T.Extension.sx
+                            and type T.I.div_rounding_mode = SparcInstr.T.I.div_rounding_mode
+                            and type T.Region.region = SparcInstr.T.Region.region
+                            and type T.ccexp = SparcInstr.T.ccexp
+                            and type T.fexp = SparcInstr.T.fexp
+                            (* and type T.labexp = SparcInstr.T.labexp *)
+                            and type T.mlrisc = SparcInstr.T.mlrisc
+                            and type T.oper = SparcInstr.T.oper
+                            and type T.rep = SparcInstr.T.rep
+                            and type T.rexp = SparcInstr.T.rexp
+                            and type T.stm = SparcInstr.T.stm
+   structure MLTreeHash : MLTREE_HASH (* where T = SparcInstr.T *)
+                          where type T.Basis.cond = SparcInstr.T.Basis.cond
+                            and type T.Basis.div_rounding_mode = SparcInstr.T.Basis.div_rounding_mode
+                            and type T.Basis.ext = SparcInstr.T.Basis.ext
+                            and type T.Basis.fcond = SparcInstr.T.Basis.fcond
+                            and type T.Basis.rounding_mode = SparcInstr.T.Basis.rounding_mode
+                            and type T.Constant.const = SparcInstr.T.Constant.const
+                            and type ('s,'r,'f,'c) T.Extension.ccx = ('s,'r,'f,'c) SparcInstr.T.Extension.ccx
+                            and type ('s,'r,'f,'c) T.Extension.fx = ('s,'r,'f,'c) SparcInstr.T.Extension.fx
+                            and type ('s,'r,'f,'c) T.Extension.rx = ('s,'r,'f,'c) SparcInstr.T.Extension.rx
+                            and type ('s,'r,'f,'c) T.Extension.sx = ('s,'r,'f,'c) SparcInstr.T.Extension.sx
+                            and type T.I.div_rounding_mode = SparcInstr.T.I.div_rounding_mode
+                            and type T.Region.region = SparcInstr.T.Region.region
+                            and type T.ccexp = SparcInstr.T.ccexp
+                            and type T.fexp = SparcInstr.T.fexp
+                            (* and type T.labexp = SparcInstr.T.labexp *)
+                            and type T.mlrisc = SparcInstr.T.mlrisc
+                            and type T.oper = SparcInstr.T.oper
+                            and type T.rep = SparcInstr.T.rep
+                            and type T.rexp = SparcInstr.T.rexp
+                            and type T.stm = SparcInstr.T.stm
    ) : INSN_PROPERTIES =
 struct
   structure I = SparcInstr

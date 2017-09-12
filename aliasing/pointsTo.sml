@@ -10,16 +10,15 @@ struct
    structure C = CellsBasis
 
    datatype cell = 
-     LINK  of region
-   | SREF  of C.cell * edges ref
-   | WREF  of C.cell * edges ref
-   | SCELL of C.cell * edges ref
-   | WCELL of C.cell * edges ref
+     LINK  of cell ref
+   | SREF  of C.cell * (edgekind * int * cell ref) list ref
+   | WREF  of C.cell * (edgekind * int * cell ref) list ref
+   | SCELL of C.cell * (edgekind * int * cell ref) list ref
+   | WCELL of C.cell * (edgekind * int * cell ref) list ref
    | TOP   of {mutable:bool, id:C.cell, name:string}
       (* a collapsed node *)
-
-   withtype region = cell ref
-   and      edges  = (edgekind * int * region) list
+   type region = cell ref
+   type edges  = (edgekind * int * region) list
 
    fun error msg = MLRiscErrorMsg.error("PointsTo",msg)
 

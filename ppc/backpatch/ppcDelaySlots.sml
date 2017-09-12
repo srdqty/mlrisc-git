@@ -5,8 +5,12 @@
 
 
 functor PPCDelaySlots(structure I : PPCINSTR
-                      structure P : INSN_PROPERTIES
-                         where I = I
+                      structure P : INSN_PROPERTIES (* where I = I *)
+                                    where type I.addressing_mode = I.addressing_mode
+                                      and type I.ea = I.ea
+                                      and type I.instr = I.instr
+                                      and type I.instruction = I.instruction
+                                      and type I.operand = I.operand
                      ) : DELAY_SLOT_PROPERTIES =
 struct
    structure I = I

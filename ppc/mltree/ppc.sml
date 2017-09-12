@@ -10,10 +10,76 @@
 
 functor PPC
   (structure PPCInstr : PPCINSTR
-   structure PseudoInstrs : PPC_PSEUDO_INSTR 
-   			where I = PPCInstr
-   structure ExtensionComp : MLTREE_EXTENSION_COMP 
-   			where I = PPCInstr and T = PPCInstr.T
+   structure PseudoInstrs : PPC_PSEUDO_INSTR (* where I = PPCInstr *)
+                            where type I.Constant.const = PPCInstr.Constant.const
+                              and type I.Region.region = PPCInstr.Region.region
+                              and type I.T.Basis.cond = PPCInstr.T.Basis.cond
+                              and type I.T.Basis.div_rounding_mode = PPCInstr.T.Basis.div_rounding_mode
+                              and type I.T.Basis.ext = PPCInstr.T.Basis.ext
+                              and type I.T.Basis.fcond = PPCInstr.T.Basis.fcond
+                              and type I.T.Basis.rounding_mode = PPCInstr.T.Basis.rounding_mode
+                              and type ('s,'r,'f,'c) I.T.Extension.ccx = ('s,'r,'f,'c) PPCInstr.T.Extension.ccx
+                              and type ('s,'r,'f,'c) I.T.Extension.fx = ('s,'r,'f,'c) PPCInstr.T.Extension.fx
+                              and type ('s,'r,'f,'c) I.T.Extension.rx = ('s,'r,'f,'c) PPCInstr.T.Extension.rx
+                              and type ('s,'r,'f,'c) I.T.Extension.sx = ('s,'r,'f,'c) PPCInstr.T.Extension.sx
+                              and type I.T.I.div_rounding_mode = PPCInstr.T.I.div_rounding_mode
+                              and type I.T.ccexp = PPCInstr.T.ccexp
+                              and type I.T.fexp = PPCInstr.T.fexp
+                              (* and type I.T.labexp = PPCInstr.T.labexp *)
+                              and type I.T.mlrisc = PPCInstr.T.mlrisc
+                              and type I.T.oper = PPCInstr.T.oper
+                              and type I.T.rep = PPCInstr.T.rep
+                              and type I.T.rexp = PPCInstr.T.rexp
+                              and type I.T.stm = PPCInstr.T.stm
+                              and type I.arith = PPCInstr.arith
+                              and type I.arithi = PPCInstr.arithi
+                              and type I.bit = PPCInstr.bit
+                              and type I.bo = PPCInstr.bo
+                              and type I.ccarith = PPCInstr.ccarith
+                              and type I.cmp = PPCInstr.cmp
+                              and type I.ea = PPCInstr.ea
+                              and type I.farith = PPCInstr.farith
+                              and type I.farith3 = PPCInstr.farith3
+                              and type I.fcmp = PPCInstr.fcmp
+                              and type I.fload = PPCInstr.fload
+                              and type I.fstore = PPCInstr.fstore
+                              and type I.funary = PPCInstr.funary
+                              and type I.instr = PPCInstr.instr
+                              and type I.instruction = PPCInstr.instruction
+                              and type I.load = PPCInstr.load
+                              and type I.operand = PPCInstr.operand
+                              and type I.rotate = PPCInstr.rotate
+                              and type I.rotatei = PPCInstr.rotatei
+                              and type I.spr = PPCInstr.spr
+                              and type I.store = PPCInstr.store
+                              and type I.unary = PPCInstr.unary
+                              and type I.xerbit = PPCInstr.xerbit
+   structure ExtensionComp : MLTREE_EXTENSION_COMP (* where I = PPCInstr and T = PPCInstr.T *)
+                             where type I.addressing_mode = PPCInstr.addressing_mode
+                               and type I.ea = PPCInstr.ea
+                               and type I.instr = PPCInstr.instr
+                               and type I.instruction = PPCInstr.instruction
+                               and type I.operand = PPCInstr.operand
+                             where type T.Basis.cond = PPCInstr.T.Basis.cond
+                               and type T.Basis.div_rounding_mode = PPCInstr.T.Basis.div_rounding_mode
+                               and type T.Basis.ext = PPCInstr.T.Basis.ext
+                               and type T.Basis.fcond = PPCInstr.T.Basis.fcond
+                               and type T.Basis.rounding_mode = PPCInstr.T.Basis.rounding_mode
+                               and type T.Constant.const = PPCInstr.T.Constant.const
+                               and type ('s,'r,'f,'c) T.Extension.ccx = ('s,'r,'f,'c) PPCInstr.T.Extension.ccx
+                               and type ('s,'r,'f,'c) T.Extension.fx = ('s,'r,'f,'c) PPCInstr.T.Extension.fx
+                               and type ('s,'r,'f,'c) T.Extension.rx = ('s,'r,'f,'c) PPCInstr.T.Extension.rx
+                               and type ('s,'r,'f,'c) T.Extension.sx = ('s,'r,'f,'c) PPCInstr.T.Extension.sx
+                               and type T.I.div_rounding_mode = PPCInstr.T.I.div_rounding_mode
+                               and type T.Region.region = PPCInstr.T.Region.region
+                               and type T.ccexp = PPCInstr.T.ccexp
+                               and type T.fexp = PPCInstr.T.fexp
+                               (* and type T.labexp = PPCInstr.T.labexp *)
+                               and type T.mlrisc = PPCInstr.T.mlrisc
+                               and type T.oper = PPCInstr.T.oper
+                               and type T.rep = PPCInstr.T.rep
+                               and type T.rexp = PPCInstr.T.rexp
+                               and type T.stm = PPCInstr.T.stm
 
    (* 
     * Support 64 bit mode? 
@@ -71,7 +137,7 @@ struct
   (*  
    * Integer multiplication 
    *)
-  functor Multiply32 = MLTreeMult
+  structure Mulu32 = MLTreeMult
     (structure I = I
      structure T = T
      structure CB = CellsBasis
@@ -84,40 +150,64 @@ struct
      fun slli{r,i,d} = [I.INSTR(SLLI32{r=r,i=i,d=d})]
      fun srli{r,i,d} = [I.INSTR(SRLI32{r=r,i=i,d=d})]
      fun srai{r,i,d} = [I.arithi{oper=I.SRAWI,rt=d,ra=r,im=I.ImmedOp i}]
-    )
 
-  structure Mulu32 = Multiply32
-    (val trapping = false
+     val trapping = false
      val multCost = multCost
      fun addv{r1,r2,d}=[I.arith{oper=I.ADD,ra=r1,rb=r2,rt=d,Rc=false,OE=false}]
      fun subv{r1,r2,d}=[I.arith{oper=I.SUBF,ra=r2,rb=r1,rt=d,Rc=false,OE=false}]
      val sh1addv = NONE
      val sh2addv = NONE
      val sh3addv = NONE
-    )
-    (val signed = false)
 
-  structure Muls32 = Multiply32
-    (val trapping = false
+     val signed = false)
+
+  structure Muls32 = MLTreeMult
+    (structure I = I
+     structure T = T
+     structure CB = CellsBasis
+     val intTy = 32
+     type arg  = {r1:CB.cell,r2:CB.cell,d:CB.cell}
+     type argi = {r:CB.cell,i:int,d:CB.cell}
+
+     fun mov{r,d} = COPY{dst=[d],src=[r],tmp=NONE}
+     fun add{r1,r2,d}= I.arith{oper=I.ADD,ra=r1,rb=r2,rt=d,Rc=false,OE=false}
+     fun slli{r,i,d} = [I.INSTR(SLLI32{r=r,i=i,d=d})]
+     fun srli{r,i,d} = [I.INSTR(SRLI32{r=r,i=i,d=d})]
+     fun srai{r,i,d} = [I.arithi{oper=I.SRAWI,rt=d,ra=r,im=I.ImmedOp i}]
+
+     val trapping = false
      val multCost = multCost
      fun addv{r1,r2,d}=[I.arith{oper=I.ADD,ra=r1,rb=r2,rt=d,Rc=false,OE=false}]
      fun subv{r1,r2,d}=[I.arith{oper=I.SUBF,ra=r2,rb=r1,rt=d,Rc=false,OE=false}]
      val sh1addv = NONE
      val sh2addv = NONE
      val sh3addv = NONE
-    )
-    (val signed = true)
 
-  structure Mult32 = Multiply32
-    (val trapping = true
+     val signed = true)
+
+  structure Mult32 = MLTreeMult
+    (structure I = I
+     structure T = T
+     structure CB = CellsBasis
+     val intTy = 32
+     type arg  = {r1:CB.cell,r2:CB.cell,d:CB.cell}
+     type argi = {r:CB.cell,i:int,d:CB.cell}
+
+     fun mov{r,d} = COPY{dst=[d],src=[r],tmp=NONE}
+     fun add{r1,r2,d}= I.arith{oper=I.ADD,ra=r1,rb=r2,rt=d,Rc=false,OE=false}
+     fun slli{r,i,d} = [I.INSTR(SLLI32{r=r,i=i,d=d})]
+     fun srli{r,i,d} = [I.INSTR(SRLI32{r=r,i=i,d=d})]
+     fun srai{r,i,d} = [I.arithi{oper=I.SRAWI,rt=d,ra=r,im=I.ImmedOp i}]
+
+     val trapping = true
      val multCost = multCost
      fun addv{r1,r2,d} = error "Mult32.addv"
      fun subv{r1,r2,d} = error "Mult32.subv"
      val sh1addv = NONE
      val sh2addv = NONE
      val sh3addv = NONE
-    )
-    (val signed = true)
+
+     val signed = true)
 
   fun selectInstructions
       (instrStream as 

@@ -6,8 +6,12 @@
 
 functor AMD64SpillInstr (
       structure I : AMD64INSTR
-      structure Props : AMD64INSN_PROPERTIES
-          where I = I
+      structure Props : AMD64INSN_PROPERTIES (* where I = I *)
+                        where type I.addressing_mode = I.addressing_mode
+                          and type I.ea = I.ea
+                          and type I.instr = I.instr
+                          and type I.instruction = I.instruction
+                          and type I.operand = I.operand
 
    (* guaranteeing that floats are stored at 16-byte aligned addresses reduces the number of instructions *)
     val floats16ByteAligned : bool

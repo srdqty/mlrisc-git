@@ -1,4 +1,5 @@
 Library 
+        signature ARRAY_NONEQ
 	signature ANNOTATIONS
 	structure Annotations
 	signature BITSET
@@ -21,6 +22,7 @@ is
 #else
 	smlnj-lib.cm
 #endif
+        array-noneq.sig
 
 	annotations.sig
 	annotations.sml

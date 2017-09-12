@@ -13,9 +13,34 @@
 
 functor CFGEmit
   (structure E   : INSTRUCTION_EMITTER
-   structure CFG : CONTROL_FLOW_GRAPH
-		   where I = E.I
-		     and P = E.S.P)  : ASSEMBLY_EMITTER = 
+   structure CFG : CONTROL_FLOW_GRAPH (* where I = E.I and P = E.S.P *)
+                   where type I.addressing_mode = E.I.addressing_mode
+                     and type I.ea = E.I.ea
+                     and type I.instr = E.I.instr
+                     and type I.instruction = E.I.instruction
+                     and type I.operand = E.I.operand
+                   where type P.Client.pseudo_op = E.S.P.Client.pseudo_op
+                     and type P.T.Basis.cond = E.S.P.T.Basis.cond
+                     and type P.T.Basis.div_rounding_mode = E.S.P.T.Basis.div_rounding_mode
+                     and type P.T.Basis.ext = E.S.P.T.Basis.ext
+                     and type P.T.Basis.fcond = E.S.P.T.Basis.fcond
+                     and type P.T.Basis.rounding_mode = E.S.P.T.Basis.rounding_mode
+                     and type P.T.Constant.const = E.S.P.T.Constant.const
+                     and type ('s,'r,'f,'c) P.T.Extension.ccx = ('s,'r,'f,'c) E.S.P.T.Extension.ccx
+                     and type ('s,'r,'f,'c) P.T.Extension.fx = ('s,'r,'f,'c) E.S.P.T.Extension.fx
+                     and type ('s,'r,'f,'c) P.T.Extension.rx = ('s,'r,'f,'c) E.S.P.T.Extension.rx
+                     and type ('s,'r,'f,'c) P.T.Extension.sx = ('s,'r,'f,'c) E.S.P.T.Extension.sx
+                     and type P.T.I.div_rounding_mode = E.S.P.T.I.div_rounding_mode
+                     and type P.T.Region.region = E.S.P.T.Region.region
+                     and type P.T.ccexp = E.S.P.T.ccexp
+                     and type P.T.fexp = E.S.P.T.fexp
+                     (* and type P.T.labexp = E.S.P.T.labexp *)
+                     and type P.T.mlrisc = E.S.P.T.mlrisc
+                     and type P.T.oper = E.S.P.T.oper
+                     and type P.T.rep = E.S.P.T.rep
+                     and type P.T.rexp = E.S.P.T.rexp
+                     and type P.T.stm = E.S.P.T.stm
+  )  : ASSEMBLY_EMITTER =
 struct
   structure CFG = CFG
 

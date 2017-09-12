@@ -1,8 +1,13 @@
 functor CFGViewer
    (structure CFG : CONTROL_FLOW_GRAPH
     structure GraphViewer : GRAPH_VIEWER
-    structure Asm	  : INSTRUCTION_EMITTER where I = CFG.I)
-      : sig
+    structure Asm	  : INSTRUCTION_EMITTER (* where I = CFG.I *)
+                            where type I.addressing_mode = CFG.I.addressing_mode
+                              and type I.ea = CFG.I.ea
+                              and type I.instr = CFG.I.instr
+                              and type I.instruction = CFG.I.instruction
+                              and type I.operand = CFG.I.operand
+   ) : sig
 	    val view : CFG.cfg -> unit
 	end =
 struct

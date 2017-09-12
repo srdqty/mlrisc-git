@@ -4,10 +4,10 @@
  * it into manageable pieces to be allocated.
  *)
 functor RegionBasedRA
-   (RA : RA)
-   (FlowgraphPartitioner : RA_FLOWGRAPH_PARTITIONER 
+   (structure RA : RA
+    structure FlowgraphPartitioner : RA_FLOWGRAPH_PARTITIONER
        where type flowgraph = RA.F.flowgraph
-       where C = RA.C
+       (* where C = RA.C *)
    ) : RA =
 struct
 

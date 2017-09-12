@@ -8,7 +8,16 @@ functor MLTreeMult
   (structure I : INSTRUCTIONS
    structure T : MLTREE
 
-   structure CB : CELLS_BASIS = CellsBasis
+   structure CB : CELLS_BASIS (* = CellsBasis *)
+                  where type CellSet.cellset = CellsBasis.CellSet.cellset
+                    and type 'a ColorTable.hash_table = 'a CellsBasis.ColorTable.hash_table
+                    and type 'a HashTable.hash_table = 'a CellsBasis.HashTable.hash_table
+                    and type SortedCells.sorted_cells = CellsBasis.SortedCells.sorted_cells
+                    and type cell = CellsBasis.cell
+                    and type cellColor = CellsBasis.cellColor
+                    and type cellkind = CellsBasis.cellkind
+                    and type cellkindDesc = CellsBasis.cellkindDesc
+                    and type cellkindInfo = CellsBasis.cellkindInfo
    val intTy : int (* width of integer type *)
 
    type argi = {r:CB.cell, i:int, d:CB.cell}
@@ -20,8 +29,8 @@ functor MLTreeMult
    val slli  : argi -> I.instruction list
    val srli  : argi -> I.instruction list
    val srai  : argi -> I.instruction list
-  )
-  (val trapping : bool (* trap on overflow? *)
+
+   val trapping : bool (* trap on overflow? *)
    val multCost : int ref  (* cost of multiplication *)
 
        (* basic ops; these have to implemented by the architecture *)
@@ -37,8 +46,8 @@ functor MLTreeMult
    val sh1addv  : (arg -> I.instruction list) option (* a*2 + b *)
    val sh2addv  : (arg -> I.instruction list) option (* a*4 + b *)  
    val sh3addv  : (arg -> I.instruction list) option (* a*8 + b *)
-  )  
-  (val signed   : bool (* signed? *)
+
+   val signed   : bool (* signed? *)
   ) : MLTREE_MULT_DIV =
 struct
    structure T = T 

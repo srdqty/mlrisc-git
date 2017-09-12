@@ -79,16 +79,14 @@
  * -- Allen
  *)
 
-local
-
-   val debug = false
-
-in
-
 functor RASpillWithRenaming
    (structure InsnProps : INSN_PROPERTIES 
-    structure Asm       : INSTRUCTION_EMITTER
-    			where I = InsnProps.I
+    structure Asm       : INSTRUCTION_EMITTER (* where I = InsnProps.I *)
+                          where type I.addressing_mode = InsnProps.I.addressing_mode
+                            and type I.ea = InsnProps.I.ea
+                            and type I.instr = InsnProps.I.instr
+                            and type I.instruction = InsnProps.I.instruction
+                            and type I.operand = InsnProps.I.operand
 
     (* Spilling a variable v creates tiny live-ranges at all its definitions
      * and uses.  The following parameter is the maximal distance of
@@ -107,6 +105,7 @@ functor RASpillWithRenaming
     val keep_multiple_values : bool ref
    ) : RA_SPILL =
 struct
+   val debug = false
 
    structure I      = InsnProps.I
    structure P      = InsnProps
@@ -584,5 +583,3 @@ struct
    in  spillRewrite
    end
 end
-
-end (* local *)

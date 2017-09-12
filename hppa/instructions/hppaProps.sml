@@ -6,8 +6,48 @@
 
 functor HppaProps
    ( structure HppaInstr : HPPAINSTR
-     structure MLTreeEval : MLTREE_EVAL where T = HppaInstr.T
-     structure MLTreeHash : MLTREE_HASH where T = HppaInstr.T
+     structure MLTreeEval : MLTREE_EVAL (* where T = HppaInstr.T *)
+                            where type T.Basis.cond = HppaInstr.T.Basis.cond
+                              and type T.Basis.div_rounding_mode = HppaInstr.T.Basis.div_rounding_mode
+                              and type T.Basis.ext = HppaInstr.T.Basis.ext
+                              and type T.Basis.fcond = HppaInstr.T.Basis.fcond
+                              and type T.Basis.rounding_mode = HppaInstr.T.Basis.rounding_mode
+                              and type T.Constant.const = HppaInstr.T.Constant.const
+                              and type ('s,'r,'f,'c) T.Extension.ccx = ('s,'r,'f,'c) HppaInstr.T.Extension.ccx
+                              and type ('s,'r,'f,'c) T.Extension.fx = ('s,'r,'f,'c) HppaInstr.T.Extension.fx
+                              and type ('s,'r,'f,'c) T.Extension.rx = ('s,'r,'f,'c) HppaInstr.T.Extension.rx
+                              and type ('s,'r,'f,'c) T.Extension.sx = ('s,'r,'f,'c) HppaInstr.T.Extension.sx
+                              and type T.I.div_rounding_mode = HppaInstr.T.I.div_rounding_mode
+                              and type T.Region.region = HppaInstr.T.Region.region
+                              and type T.ccexp = HppaInstr.T.ccexp
+                              and type T.fexp = HppaInstr.T.fexp
+                              (* and type T.labexp = HppaInstr.T.labexp *)
+                              and type T.mlrisc = HppaInstr.T.mlrisc
+                              and type T.oper = HppaInstr.T.oper
+                              and type T.rep = HppaInstr.T.rep
+                              and type T.rexp = HppaInstr.T.rexp
+                              and type T.stm = HppaInstr.T.stm
+     structure MLTreeHash : MLTREE_HASH (* where T = HppaInstr.T *)
+                            where type T.Basis.cond = HppaInstr.T.Basis.cond
+                              and type T.Basis.div_rounding_mode = HppaInstr.T.Basis.div_rounding_mode
+                              and type T.Basis.ext = HppaInstr.T.Basis.ext
+                              and type T.Basis.fcond = HppaInstr.T.Basis.fcond
+                              and type T.Basis.rounding_mode = HppaInstr.T.Basis.rounding_mode
+                              and type T.Constant.const = HppaInstr.T.Constant.const
+                              and type ('s,'r,'f,'c) T.Extension.ccx = ('s,'r,'f,'c) HppaInstr.T.Extension.ccx
+                              and type ('s,'r,'f,'c) T.Extension.fx = ('s,'r,'f,'c) HppaInstr.T.Extension.fx
+                              and type ('s,'r,'f,'c) T.Extension.rx = ('s,'r,'f,'c) HppaInstr.T.Extension.rx
+                              and type ('s,'r,'f,'c) T.Extension.sx = ('s,'r,'f,'c) HppaInstr.T.Extension.sx
+                              and type T.I.div_rounding_mode = HppaInstr.T.I.div_rounding_mode
+                              and type T.Region.region = HppaInstr.T.Region.region
+                              and type T.ccexp = HppaInstr.T.ccexp
+                              and type T.fexp = HppaInstr.T.fexp
+                              (* and type T.labexp = HppaInstr.T.labexp *)
+                              and type T.mlrisc = HppaInstr.T.mlrisc
+                              and type T.oper = HppaInstr.T.oper
+                              and type T.rep = HppaInstr.T.rep
+                              and type T.rexp = HppaInstr.T.rexp
+                              and type T.stm = HppaInstr.T.stm
     ) : INSN_PROPERTIES = 
 struct
   structure I = HppaInstr

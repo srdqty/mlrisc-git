@@ -11,11 +11,72 @@
 
 functor Alpha
    (structure AlphaInstr : ALPHAINSTR 
-    structure PseudoInstrs : ALPHA_PSEUDO_INSTR
-    			where I = AlphaInstr
-    structure ExtensionComp : MLTREE_EXTENSION_COMP
-    			where I = AlphaInstr
-			  and T = AlphaInstr.T
+    structure PseudoInstrs : ALPHA_PSEUDO_INSTR (* where I = AlphaInstr *)
+                             where type I.Constant.const = AlphaInstr.Constant.const
+                               and type I.Region.region = AlphaInstr.Region.region
+                               and type I.T.Basis.cond = AlphaInstr.T.Basis.cond
+                               and type I.T.Basis.div_rounding_mode = AlphaInstr.T.Basis.div_rounding_mode
+                               and type I.T.Basis.ext = AlphaInstr.T.Basis.ext
+                               and type I.T.Basis.fcond = AlphaInstr.T.Basis.fcond
+                               and type I.T.Basis.rounding_mode = AlphaInstr.T.Basis.rounding_mode
+                               and type ('s,'r,'f,'c) I.T.Extension.ccx = ('s,'r,'f,'c) AlphaInstr.T.Extension.ccx
+                               and type ('s,'r,'f,'c) I.T.Extension.fx = ('s,'r,'f,'c) AlphaInstr.T.Extension.fx
+                               and type ('s,'r,'f,'c) I.T.Extension.rx = ('s,'r,'f,'c) AlphaInstr.T.Extension.rx
+                               and type ('s,'r,'f,'c) I.T.Extension.sx = ('s,'r,'f,'c) AlphaInstr.T.Extension.sx
+                               and type I.T.I.div_rounding_mode = AlphaInstr.T.I.div_rounding_mode
+                               and type I.T.ccexp = AlphaInstr.T.ccexp
+                               and type I.T.fexp = AlphaInstr.T.fexp
+                               (* and type I.T.labexp = AlphaInstr.T.labexp *)
+                               and type I.T.mlrisc = AlphaInstr.T.mlrisc
+                               and type I.T.oper = AlphaInstr.T.oper
+                               and type I.T.rep = AlphaInstr.T.rep
+                               and type I.T.rexp = AlphaInstr.T.rexp
+                               and type I.T.stm = AlphaInstr.T.stm
+                               and type I.branch = AlphaInstr.branch
+                               and type I.cmove = AlphaInstr.cmove
+                               and type I.ea = AlphaInstr.ea
+                               and type I.fbranch = AlphaInstr.fbranch
+                               and type I.fcmove = AlphaInstr.fcmove
+                               and type I.fload = AlphaInstr.fload
+                               and type I.foperate = AlphaInstr.foperate
+                               and type I.foperateV = AlphaInstr.foperateV
+                               and type I.fstore = AlphaInstr.fstore
+                               and type I.funary = AlphaInstr.funary
+                               and type I.instr = AlphaInstr.instr
+                               and type I.instruction = AlphaInstr.instruction
+                               and type I.load = AlphaInstr.load
+                               and type I.operand = AlphaInstr.operand
+                               and type I.operate = AlphaInstr.operate
+                               and type I.operateV = AlphaInstr.operateV
+                               and type I.osf_user_palcode = AlphaInstr.osf_user_palcode
+                               and type I.pseudo_op = AlphaInstr.pseudo_op
+                               and type I.store = AlphaInstr.store
+    structure ExtensionComp : MLTREE_EXTENSION_COMP (* where I = AlphaInstr and T = AlphaInstr.T *)
+                              where type I.addressing_mode = AlphaInstr.addressing_mode
+                                and type I.ea = AlphaInstr.ea
+                                and type I.instr = AlphaInstr.instr
+                                and type I.instruction = AlphaInstr.instruction
+                                and type I.operand = AlphaInstr.operand
+                              where type T.Basis.cond = AlphaInstr.T.Basis.cond
+                                and type T.Basis.div_rounding_mode = AlphaInstr.T.Basis.div_rounding_mode
+                                and type T.Basis.ext = AlphaInstr.T.Basis.ext
+                                and type T.Basis.fcond = AlphaInstr.T.Basis.fcond
+                                and type T.Basis.rounding_mode = AlphaInstr.T.Basis.rounding_mode
+                                and type T.Constant.const = AlphaInstr.T.Constant.const
+                                and type ('s,'r,'f,'c) T.Extension.ccx = ('s,'r,'f,'c) AlphaInstr.T.Extension.ccx
+                                and type ('s,'r,'f,'c) T.Extension.fx = ('s,'r,'f,'c) AlphaInstr.T.Extension.fx
+                                and type ('s,'r,'f,'c) T.Extension.rx = ('s,'r,'f,'c) AlphaInstr.T.Extension.rx
+                                and type ('s,'r,'f,'c) T.Extension.sx = ('s,'r,'f,'c) AlphaInstr.T.Extension.sx
+                                and type T.I.div_rounding_mode = AlphaInstr.T.I.div_rounding_mode
+                                and type T.Region.region = AlphaInstr.T.Region.region
+                                and type T.ccexp = AlphaInstr.T.ccexp
+                                and type T.fexp = AlphaInstr.T.fexp
+                                (* and type T.labexp = AlphaInstr.T.labexp *)
+                                and type T.mlrisc = AlphaInstr.T.mlrisc
+                                and type T.oper = AlphaInstr.T.oper
+                                and type T.rep = AlphaInstr.T.rep
+                                and type T.rexp = AlphaInstr.T.rexp
+                                and type T.stm = AlphaInstr.T.stm
 
       (* Cost of multiplication in cycles *)
     val multCost : int ref
@@ -215,8 +276,10 @@ struct
    * Specialize the modules for multiplication/division 
    * by constant optimizations.
    *)
-  functor Multiply32 = MLTreeMult
-    (structure I = I
+
+  (* signed, trapping version of multiply and divide *)
+  structure Multiply32 = struct
+     structure I = I
      structure T = T
      structure CB = CellsBasis
 
@@ -256,10 +319,10 @@ struct
          in  [I.operate{oper=I.ADDL,ra=r,rb=zeroOpn,rc=tmp},
               I.operate{oper=I.SRA,ra=tmp,rb=I.IMMop i,rc=d}]
          end 
-    )
+  end
 
-  functor Multiply64 = MLTreeMult
-    (structure I = I
+  structure Multiply64 = struct
+     structure I = I
      structure T = T
      structure CB = CellsBasis
    
@@ -273,23 +336,25 @@ struct
      fun slli{r,i,d} = [I.operate{oper=I.SLL,ra=r,rb=I.IMMop i,rc=d}]
      fun srli{r,i,d} = [I.operate{oper=I.SRL,ra=r,rb=I.IMMop i,rc=d}]
      fun srai{r,i,d} = [I.operate{oper=I.SRA,ra=r,rb=I.IMMop i,rc=d}]
-    )
+  end
 
   (* signed, trapping version of multiply and divide *)
-  structure Mult32 = Multiply32
-    (val trapping = true
+  structure Mult32 = MLTreeMult
+    (open Multiply32
+     val trapping = true
      val multCost = multCost
      fun addv{r1,r2,d} = [I.operatev{oper=I.ADDLV,ra=r1,rb=I.REGop r2,rc=d}]
      fun subv{r1,r2,d} = [I.operatev{oper=I.SUBLV,ra=r1,rb=I.REGop r2,rc=d}]
      val sh1addv = NONE
      val sh2addv = NONE
      val sh3addv = NONE
-    )
-    (val signed = true)
+
+     val signed = true)
 
   (* non-trapping version of multiply and divide *)
-  functor Mul32 = Multiply32
-    (val trapping = false
+  structure Mul32 = struct
+     open Multiply32
+     val trapping = false
      val multCost = multCost
      fun addv{r1,r2,d} = [I.operate{oper=I.ADDL,ra=r1,rb=I.REGop r2,rc=d}]
      fun subv{r1,r2,d} = [I.operate{oper=I.SUBL,ra=r1,rb=I.REGop r2,rc=d}]
@@ -298,25 +363,27 @@ struct
                     [I.operate{oper=I.S4ADDL,ra=r1,rb=I.REGop r2,rc=d}])
      val sh3addv = SOME(fn {r1,r2,d} => 
                     [I.operate{oper=I.S8ADDL,ra=r1,rb=I.REGop r2,rc=d}])
-    )
-  structure Mulu32 = Mul32(val signed = false)
-  structure Muls32 = Mul32(val signed = true)
+  end
+  structure Mulu32 = MLTreeMult(open Mul32 val signed = false)
+  structure Muls32 = MLTreeMult(open Mul32 val signed = true)
 
   (* signed, trapping version of multiply and divide *)
-  structure Mult64 = Multiply64
-    (val trapping = true
+  structure Mult64 = MLTreeMult
+    (open Multiply64
+     val trapping = true
      val multCost = multCost
      fun addv{r1,r2,d} = [I.operatev{oper=I.ADDQV,ra=r1,rb=I.REGop r2,rc=d}]
      fun subv{r1,r2,d} = [I.operatev{oper=I.SUBQV,ra=r1,rb=I.REGop r2,rc=d}]
      val sh1addv = NONE
      val sh2addv = NONE
      val sh3addv = NONE
-    )
-    (val signed = true)
+
+     val signed = true)
 
   (* unsigned, non-trapping version of multiply and divide *)
-  functor Mul64 = Multiply64
-    (val trapping = false
+  structure Mul64 = struct
+     open Multiply64
+     val trapping = false
      val multCost = multCost
      fun addv{r1,r2,d} = [I.operate{oper=I.ADDQ,ra=r1,rb=I.REGop r2,rc=d}]
      fun subv{r1,r2,d} = [I.operate{oper=I.SUBQ,ra=r1,rb=I.REGop r2,rc=d}]
@@ -325,9 +392,9 @@ struct
                     [I.operate{oper=I.S4ADDQ,ra=r1,rb=I.REGop r2,rc=d}])
      val sh3addv = SOME(fn {r1,r2,d} => 
                     [I.operate{oper=I.S8ADDQ,ra=r1,rb=I.REGop r2,rc=d}])
-    )
-  structure Mulu64 = Mul64(val signed = false)
-  structure Muls64 = Mul64(val signed = true)
+  end
+  structure Mulu64 = MLTreeMult(open Mul64 val signed = false)
+  structure Muls64 = MLTreeMult(open Mul64  val signed = true)
 
   (* 
    * The main stuff

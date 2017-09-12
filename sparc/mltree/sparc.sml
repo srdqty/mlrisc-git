@@ -14,12 +14,72 @@
 
 functor Sparc
   (structure SparcInstr : SPARCINSTR
-   structure PseudoInstrs : SPARC_PSEUDO_INSTR 
-   			where I = SparcInstr
-   structure ExtensionComp : MLTREE_EXTENSION_COMP
-   			where I = SparcInstr
-			  and T = SparcInstr.T
-
+   structure PseudoInstrs : SPARC_PSEUDO_INSTR (* where I = SparcInstr *)
+                            where type I.Constant.const = SparcInstr.Constant.const
+                              and type I.Region.region = SparcInstr.Region.region
+                              and type I.T.Basis.cond = SparcInstr.T.Basis.cond
+                              and type I.T.Basis.div_rounding_mode = SparcInstr.T.Basis.div_rounding_mode
+                              and type I.T.Basis.ext = SparcInstr.T.Basis.ext
+                              and type I.T.Basis.fcond = SparcInstr.T.Basis.fcond
+                              and type I.T.Basis.rounding_mode = SparcInstr.T.Basis.rounding_mode
+                              and type ('s,'r,'f,'c) I.T.Extension.ccx = ('s,'r,'f,'c) SparcInstr.T.Extension.ccx
+                              and type ('s,'r,'f,'c) I.T.Extension.fx = ('s,'r,'f,'c) SparcInstr.T.Extension.fx
+                              and type ('s,'r,'f,'c) I.T.Extension.rx = ('s,'r,'f,'c) SparcInstr.T.Extension.rx
+                              and type ('s,'r,'f,'c) I.T.Extension.sx = ('s,'r,'f,'c) SparcInstr.T.Extension.sx
+                              and type I.T.I.div_rounding_mode = SparcInstr.T.I.div_rounding_mode
+                              and type I.T.ccexp = SparcInstr.T.ccexp
+                              and type I.T.fexp = SparcInstr.T.fexp
+                              (* and type I.T.labexp = SparcInstr.T.labexp *)
+                              and type I.T.mlrisc = SparcInstr.T.mlrisc
+                              and type I.T.oper = SparcInstr.T.oper
+                              and type I.T.rep = SparcInstr.T.rep
+                              and type I.T.rexp = SparcInstr.T.rexp
+                              and type I.T.stm = SparcInstr.T.stm
+                              and type I.arith = SparcInstr.arith
+                              and type I.branch = SparcInstr.branch
+                              and type I.cc = SparcInstr.cc
+                              and type I.ea = SparcInstr.ea
+                              and type I.farith1 = SparcInstr.farith1
+                              and type I.farith2 = SparcInstr.farith2
+                              and type I.fbranch = SparcInstr.fbranch
+                              and type I.fcmp = SparcInstr.fcmp
+                              and type I.fload = SparcInstr.fload
+                              and type I.fsize = SparcInstr.fsize
+                              and type I.fstore = SparcInstr.fstore
+                              and type I.instr = SparcInstr.instr
+                              and type I.instruction = SparcInstr.instruction
+                              and type I.load = SparcInstr.load
+                              and type I.operand = SparcInstr.operand
+                              and type I.prediction = SparcInstr.prediction
+                              and type I.rcond = SparcInstr.rcond
+                              and type I.shift = SparcInstr.shift
+                              and type I.store = SparcInstr.store
+   structure ExtensionComp : MLTREE_EXTENSION_COMP (* where I = SparcInstr and T = SparcInstr.T *)
+                             where type I.addressing_mode = SparcInstr.addressing_mode
+                               and type I.ea = SparcInstr.ea
+                               and type I.instr = SparcInstr.instr
+                               and type I.instruction = SparcInstr.instruction
+                               and type I.operand = SparcInstr.operand
+                             where type T.Basis.cond = SparcInstr.T.Basis.cond
+                               and type T.Basis.div_rounding_mode = SparcInstr.T.Basis.div_rounding_mode
+                               and type T.Basis.ext = SparcInstr.T.Basis.ext
+                               and type T.Basis.fcond = SparcInstr.T.Basis.fcond
+                               and type T.Basis.rounding_mode = SparcInstr.T.Basis.rounding_mode
+                               and type T.Constant.const = SparcInstr.T.Constant.const
+                               and type ('s,'r,'f,'c) T.Extension.ccx = ('s,'r,'f,'c) SparcInstr.T.Extension.ccx
+                               and type ('s,'r,'f,'c) T.Extension.fx = ('s,'r,'f,'c) SparcInstr.T.Extension.fx
+                               and type ('s,'r,'f,'c) T.Extension.rx = ('s,'r,'f,'c) SparcInstr.T.Extension.rx
+                               and type ('s,'r,'f,'c) T.Extension.sx = ('s,'r,'f,'c) SparcInstr.T.Extension.sx
+                               and type T.I.div_rounding_mode = SparcInstr.T.I.div_rounding_mode
+                               and type T.Region.region = SparcInstr.T.Region.region
+                               and type T.ccexp = SparcInstr.T.ccexp
+                               and type T.fexp = SparcInstr.T.fexp
+                               (* and type T.labexp = SparcInstr.T.labexp *)
+                               and type T.mlrisc = SparcInstr.T.mlrisc
+                               and type T.oper = SparcInstr.T.oper
+                               and type T.rep = SparcInstr.T.rep
+                               and type T.rexp = SparcInstr.T.rexp
+                               and type T.stm = SparcInstr.T.stm
 			  
    (* 
     * The client should also specify these parameters.
@@ -76,8 +136,8 @@ struct
                             val rep = NEITHER 
                            )
 
-  functor Multiply32 = MLTreeMult
-    (structure I = I
+  structure Multiply32 = struct
+     structure I = I
      structure T = T
      structure CB = CellsBasis
      type arg  = {r1:CB.cell,r2:CB.cell,d:CB.cell}
@@ -89,10 +149,10 @@ struct
      fun slli{r,i,d} = [I.shift{s=I.SLL,r=r,i=I.IMMED i,d=d}]
      fun srli{r,i,d} = [I.shift{s=I.SRL,r=r,i=I.IMMED i,d=d}]
      fun srai{r,i,d} = [I.shift{s=I.SRA,r=r,i=I.IMMED i,d=d}]
-    )
+  end
 
-  functor Multiply64 = MLTreeMult
-    (structure I = I
+  structure Multiply64 = struct
+     structure I = I
      structure T = T
      structure CB = CellsBasis
      type arg  = {r1:CB.cell,r2:CB.cell,d:CB.cell}
@@ -104,11 +164,12 @@ struct
      fun slli{r,i,d} = [I.shift{s=I.SLLX,r=r,i=I.IMMED i,d=d}]
      fun srli{r,i,d} = [I.shift{s=I.SRLX,r=r,i=I.IMMED i,d=d}]
      fun srai{r,i,d} = [I.shift{s=I.SRAX,r=r,i=I.IMMED i,d=d}]
-    )
+  end
 
   (* signed, trapping version of multiply and divide *)
-  structure Mult32 = Multiply32
-    (val trapping = true
+  structure Mult32 = MLTreeMult
+    (open Multiply32
+     val trapping = true
      val multCost = multCost 
      fun addv{r1,r2,d} = 
          I.arith{a=I.ADDCC,r=r1,i=I.REG r2,d=d}::PseudoInstrs.overflowtrap32 
@@ -117,26 +178,28 @@ struct
      val sh1addv = NONE 
      val sh2addv = NONE 
      val sh3addv = NONE 
-    )
-    (val signed = true)
+
+     val signed = true)
 
   (* unsigned, non-trapping version of multiply and divide *)
-  functor Mul32 = Multiply32
-    (val trapping = false
+  structure Mul32 = struct
+     open Multiply32
+     val trapping = false
      val multCost = muluCost
      fun addv{r1,r2,d} = [I.arith{a=I.ADD,r=r1,i=I.REG r2,d=d}]
      fun subv{r1,r2,d} = [I.arith{a=I.SUB,r=r1,i=I.REG r2,d=d}]
      val sh1addv = NONE 
      val sh2addv = NONE 
      val sh3addv = NONE 
-    )
-  structure Mulu32 = Mul32(val signed = false)
+  end
+  structure Mulu32 = MLTreeMult(open Mul32 val signed = false)
 
-  structure Muls32 = Mul32(val signed = true)
+  structure Muls32 = MLTreeMult(open Mul32 val signed = true)
 
   (* signed, trapping version of multiply and divide *)
-  structure Mult64 = Multiply64
-    (val trapping = true
+  structure Mult64 = MLTreeMult
+    (open Multiply64
+     val trapping = true
      val multCost = multCost 
      fun addv{r1,r2,d} = 
          I.arith{a=I.ADDCC,r=r1,i=I.REG r2,d=d}::PseudoInstrs.overflowtrap64 
@@ -145,22 +208,23 @@ struct
      val sh1addv = NONE 
      val sh2addv = NONE 
      val sh3addv = NONE 
-    )
-    (val signed = true)
+
+     val signed = true)
 
   (* unsigned, non-trapping version of multiply and divide *)
-  functor Mul64 = Multiply64
-    (val trapping = false
+  structure Mul64 = struct
+     open Multiply64
+     val trapping = false
      val multCost = muluCost
      fun addv{r1,r2,d} = [I.arith{a=I.ADD,r=r1,i=I.REG r2,d=d}]
      fun subv{r1,r2,d} = [I.arith{a=I.SUB,r=r1,i=I.REG r2,d=d}]
      val sh1addv = NONE 
      val sh2addv = NONE 
      val sh3addv = NONE 
-    )
-  structure Mulu64 = Mul64(val signed = false)
+  end
+  structure Mulu64 = MLTreeMult(open Mul64 val signed = false)
 
-  structure Muls64 = Mul64(val signed = true)
+  structure Muls64 = MLTreeMult(open Mul64 val signed = true)
 
   datatype commutative = COMMUTE | NOCOMMUTE
   datatype cc = REG    (* write to register *)

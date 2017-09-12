@@ -9,10 +9,53 @@
 functor AMD64Gen (
 
     structure I : AMD64INSTR
-    structure MLTreeUtils : MLTREE_UTILS
-	where T = I.T
-    structure ExtensionComp : MLTREE_EXTENSION_COMP
-        where I = I and T = I.T
+    structure MLTreeUtils : MLTREE_UTILS (* where T = I.T *)
+                            where type T.Basis.cond = I.T.Basis.cond
+                              and type T.Basis.div_rounding_mode = I.T.Basis.div_rounding_mode
+                              and type T.Basis.ext = I.T.Basis.ext
+                              and type T.Basis.fcond = I.T.Basis.fcond
+                              and type T.Basis.rounding_mode = I.T.Basis.rounding_mode
+                              and type T.Constant.const = I.T.Constant.const
+                              and type ('s,'r,'f,'c) T.Extension.ccx = ('s,'r,'f,'c) I.T.Extension.ccx
+                              and type ('s,'r,'f,'c) T.Extension.fx = ('s,'r,'f,'c) I.T.Extension.fx
+                              and type ('s,'r,'f,'c) T.Extension.rx = ('s,'r,'f,'c) I.T.Extension.rx
+                              and type ('s,'r,'f,'c) T.Extension.sx = ('s,'r,'f,'c) I.T.Extension.sx
+                              and type T.I.div_rounding_mode = I.T.I.div_rounding_mode
+                               and type T.Region.region = I.T.Region.region
+                              and type T.ccexp = I.T.ccexp
+                              and type T.fexp = I.T.fexp
+                              (* and type T.labexp = I.T.labexp *)
+                              and type T.mlrisc = I.T.mlrisc
+                              and type T.oper = I.T.oper
+                              and type T.rep = I.T.rep
+                              and type T.rexp = I.T.rexp
+                              and type T.stm = I.T.stm
+    structure ExtensionComp : MLTREE_EXTENSION_COMP (* where I = I and T = I.T *)
+                              where type I.addressing_mode = I.addressing_mode
+                                and type I.ea = I.ea
+                                and type I.instr = I.instr
+                                and type I.instruction = I.instruction
+                                and type I.operand = I.operand
+                              where type T.Basis.cond = I.T.Basis.cond
+                                and type T.Basis.div_rounding_mode = I.T.Basis.div_rounding_mode
+                                and type T.Basis.ext = I.T.Basis.ext
+                                and type T.Basis.fcond = I.T.Basis.fcond
+                                and type T.Basis.rounding_mode = I.T.Basis.rounding_mode
+                                and type T.Constant.const = I.T.Constant.const
+                                and type ('s,'r,'f,'c) T.Extension.ccx = ('s,'r,'f,'c) I.T.Extension.ccx
+                                and type ('s,'r,'f,'c) T.Extension.fx = ('s,'r,'f,'c) I.T.Extension.fx
+                                and type ('s,'r,'f,'c) T.Extension.rx = ('s,'r,'f,'c) I.T.Extension.rx
+                                and type ('s,'r,'f,'c) T.Extension.sx = ('s,'r,'f,'c) I.T.Extension.sx
+                                and type T.I.div_rounding_mode = I.T.I.div_rounding_mode
+                                and type T.Region.region = I.T.Region.region
+                                and type T.ccexp = I.T.ccexp
+                                and type T.fexp = I.T.fexp
+                                (* and type T.labexp = I.T.labexp *)
+                                and type T.mlrisc = I.T.mlrisc
+                                and type T.oper = I.T.oper
+                                and type T.rep = I.T.rep
+                                and type T.rexp = I.T.rexp
+                                and type T.stm = I.T.stm
 
     (* Take a number of bits and returns an rexp that points to a literal with the high bit set.
      * We need this literal value for floating-point negation and absolute value (at least

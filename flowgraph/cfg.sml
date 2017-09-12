@@ -10,8 +10,18 @@
 functor ControlFlowGraph
    (structure I : INSTRUCTIONS
     structure GraphImpl : GRAPH_IMPLEMENTATION
-    structure InsnProps : INSN_PROPERTIES where I = I
-    structure Asm : INSTRUCTION_EMITTER where I = I
+    structure InsnProps : INSN_PROPERTIES (* where I = I *)
+                          where type I.addressing_mode = I.addressing_mode
+                            and type I.ea = I.ea
+                            and type I.instr = I.instr
+                            and type I.instruction = I.instruction
+                            and type I.operand = I.operand
+    structure Asm : INSTRUCTION_EMITTER (* where I = I *)
+                    where type I.addressing_mode = I.addressing_mode
+                      and type I.ea = I.ea
+                      and type I.instr = I.instr
+                      and type I.instruction = I.instruction
+                      and type I.operand = I.operand
    ) : CONTROL_FLOW_GRAPH =
 struct
 

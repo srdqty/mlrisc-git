@@ -7,11 +7,39 @@ signature RA_SPILL =
 sig
 
    structure I : INSTRUCTIONS
-   structure G : RA_GRAPH = RAGraph
+   structure G : RA_GRAPH (* = RAGraph *)
+                 where type C.CellSet.cellset = RAGraph.C.CellSet.cellset
+                   and type 'a C.ColorTable.hash_table = 'a RAGraph.C.ColorTable.hash_table
+                   and type 'a C.HashTable.hash_table = 'a RAGraph.C.HashTable.hash_table
+                   and type C.SortedCells.sorted_cells = RAGraph.C.SortedCells.sorted_cells
+                   and type C.cell = RAGraph.C.cell
+                   and type C.cellColor = RAGraph.C.cellColor
+                   and type C.cellkind = RAGraph.C.cellkind
+                   and type C.cellkindDesc = RAGraph.C.cellkindDesc
+                   and type C.cellkindInfo = RAGraph.C.cellkindInfo
+                   and type 'a PPtHashTable.hash_table = 'a RAGraph.PPtHashTable.hash_table
+                   and type 'a SpillLocHashTable.hash_table = 'a RAGraph.SpillLocHashTable.hash_table
+                   and type interferenceGraph = RAGraph.interferenceGraph
+                   and type move = RAGraph.move
+                   and type moveKind = RAGraph.moveKind
+                   and type moveStatus = RAGraph.moveStatus
+                   and type node = RAGraph.node
+                   and type nodeStatus = RAGraph.nodeStatus
+                   and type spillLoc = RAGraph.spillLoc
+                   and type trailInfo = RAGraph.trailInfo
    structure C : CELLS 
-      sharing I.C = C
+      (* sharing I.C = C *)
 
-   structure CB : CELLS_BASIS = CellsBasis 
+   structure CB : CELLS_BASIS (* = CellsBasis *)
+                  where type CellSet.cellset = CellsBasis.CellSet.cellset
+                    and type 'a ColorTable.hash_table = 'a CellsBasis.ColorTable.hash_table
+                    and type 'a HashTable.hash_table = 'a CellsBasis.HashTable.hash_table
+                    and type SortedCells.sorted_cells = CellsBasis.SortedCells.sorted_cells
+                    and type cell = CellsBasis.cell
+                    and type cellColor = CellsBasis.cellColor
+                    and type cellkind = CellsBasis.cellkind
+                    and type cellkindDesc = CellsBasis.cellkindDesc
+                    and type cellkindInfo = CellsBasis.cellkindInfo
    type copyInstr =
           (CB.cell list * CB.cell list) * I.instruction -> I.instruction list
 

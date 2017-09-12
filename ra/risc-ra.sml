@@ -5,17 +5,57 @@
  *)
 functor RISC_RA
   (structure I         : INSTRUCTIONS
-   structure Asm       : INSTRUCTION_EMITTER
-   			where I = I 
-   structure CFG       : CONTROL_FLOW_GRAPH 
-   			where I = I
-		          and P = Asm.S.P
-   structure InsnProps : INSN_PROPERTIES
-   			where I = I
-   structure Rewrite   : REWRITE_INSTRUCTIONS
-   			where I = I
-   structure SpillInstr : ARCH_SPILL_INSTR
-                        where I = I
+   structure Asm        : INSTRUCTION_EMITTER (* where I = I *)
+                          where type I.addressing_mode = I.addressing_mode
+                            and type I.ea = I.ea
+                            and type I.instr = I.instr
+                            and type I.instruction = I.instruction
+                            and type I.operand = I.operand
+   structure CFG        : CONTROL_FLOW_GRAPH (* where I = I and P = Asm.S.P *)
+                          where type I.addressing_mode = I.addressing_mode
+                            and type I.ea = I.ea
+                            and type I.instr = I.instr
+                            and type I.instruction = I.instruction
+                            and type I.operand = I.operand
+                          where type P.Client.pseudo_op = Asm.S.P.Client.pseudo_op
+                            and type P.T.Basis.cond = Asm.S.P.T.Basis.cond
+                            and type P.T.Basis.div_rounding_mode = Asm.S.P.T.Basis.div_rounding_mode
+                            and type P.T.Basis.ext = Asm.S.P.T.Basis.ext
+                            and type P.T.Basis.fcond = Asm.S.P.T.Basis.fcond
+                            and type P.T.Basis.rounding_mode = Asm.S.P.T.Basis.rounding_mode
+                            and type P.T.Constant.const = Asm.S.P.T.Constant.const
+                            and type ('s,'r,'f,'c) P.T.Extension.ccx = ('s,'r,'f,'c) Asm.S.P.T.Extension.ccx
+                            and type ('s,'r,'f,'c) P.T.Extension.fx = ('s,'r,'f,'c) Asm.S.P.T.Extension.fx
+                            and type ('s,'r,'f,'c) P.T.Extension.rx = ('s,'r,'f,'c) Asm.S.P.T.Extension.rx
+                            and type ('s,'r,'f,'c) P.T.Extension.sx = ('s,'r,'f,'c) Asm.S.P.T.Extension.sx
+                            and type P.T.I.div_rounding_mode = Asm.S.P.T.I.div_rounding_mode
+                            and type P.T.Region.region = Asm.S.P.T.Region.region
+                            and type P.T.ccexp = Asm.S.P.T.ccexp
+                            and type P.T.fexp = Asm.S.P.T.fexp
+                            (* and type P.T.labexp = Asm.S.P.T.labexp *)
+                            and type P.T.mlrisc = Asm.S.P.T.mlrisc
+                            and type P.T.oper = Asm.S.P.T.oper
+                            and type P.T.rep = Asm.S.P.T.rep
+                            and type P.T.rexp = Asm.S.P.T.rexp
+                            and type P.T.stm = Asm.S.P.T.stm
+   structure InsnProps  : INSN_PROPERTIES (* where I = I *)
+                          where type I.addressing_mode = I.addressing_mode
+                            and type I.ea = I.ea
+                            and type I.instr = I.instr
+                            and type I.instruction = I.instruction
+                            and type I.operand = I.operand
+   structure Rewrite    : REWRITE_INSTRUCTIONS (* where I = I *)
+                          where type I.addressing_mode = I.addressing_mode
+                            and type I.ea = I.ea
+                            and type I.instr = I.instr
+                            and type I.instruction = I.instruction
+                            and type I.operand = I.operand
+   structure SpillInstr : ARCH_SPILL_INSTR (* where I = I *)
+                          where type I.addressing_mode = I.addressing_mode
+                            and type I.ea = I.ea
+                            and type I.instr = I.instr
+                            and type I.instruction = I.instruction
+                            and type I.operand = I.operand
 
       (* Spilling heuristics determines which node should be spilled.
        * You can use Chaitin, ChowHenessey, or one of your own.
@@ -26,7 +66,12 @@ functor RISC_RA
        * spill code.  You can use RASpill, or RASpillWithRenaming,
        * or write your own if you are feeling adventurous.
        *)
-   structure Spill : RA_SPILL where I = I
+   structure Spill : RA_SPILL (* where I = I *)
+                     where type I.addressing_mode = I.addressing_mode
+                       and type I.ea = I.ea
+                       and type I.instr = I.instr
+                       and type I.instruction = I.instruction
+                       and type I.operand = I.operand
           
    val architecture : string
 
@@ -85,9 +130,9 @@ struct
    (* The generic register allocator *)
    structure Ra =
       RegisterAllocator
-        (SpillHeur) 
+        (structure SpillHeuristics = SpillHeur
         (* (ChowHennessySpillHeur) *)
-        (ClusterRA 
+         structure Flowgraph = ClusterRA
           (structure Flowgraph = CFG
            structure Asm = Asm
            structure InsnProps = InsnProps

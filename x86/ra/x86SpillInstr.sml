@@ -8,7 +8,12 @@
  * introduced before.
  *)
 functor X86SpillInstr(structure Instr: X86INSTR
-                 structure Props: INSN_PROPERTIES where I = Instr
+                      structure Props: INSN_PROPERTIES (* where I = Instr *)
+                                       where type I.addressing_mode = Instr.addressing_mode
+                                         and type I.ea = Instr.ea
+                                         and type I.instr = Instr.instr
+                                         and type I.instruction = Instr.instruction
+                                         and type I.operand = Instr.operand
 		) : ARCH_SPILL_INSTR = struct
 
   structure I  = Instr

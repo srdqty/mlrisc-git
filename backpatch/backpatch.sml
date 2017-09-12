@@ -8,13 +8,45 @@
 
 functor BBSched2
     (structure Emitter : INSTRUCTION_EMITTER
-     structure CFG     : CONTROL_FLOW_GRAPH
-			where I = Emitter.I
-		          and P = Emitter.S.P
-     structure Jumps   : SDI_JUMPS
-     			where I = CFG.I
-     structure Props   : INSN_PROPERTIES
-			where I = CFG.I
+     structure CFG     : CONTROL_FLOW_GRAPH (* where I = Emitter.I and P = Emitter.S.P *)
+                         where type I.addressing_mode = Emitter.I.addressing_mode
+                           and type I.ea = Emitter.I.ea
+                           and type I.instr = Emitter.I.instr
+                           and type I.instruction = Emitter.I.instruction
+                           and type I.operand = Emitter.I.operand
+                         where type P.Client.pseudo_op = Emitter.S.P.Client.pseudo_op
+                           and type P.T.Basis.cond = Emitter.S.P.T.Basis.cond
+                           and type P.T.Basis.div_rounding_mode = Emitter.S.P.T.Basis.div_rounding_mode
+                           and type P.T.Basis.ext = Emitter.S.P.T.Basis.ext
+                           and type P.T.Basis.fcond = Emitter.S.P.T.Basis.fcond
+                           and type P.T.Basis.rounding_mode = Emitter.S.P.T.Basis.rounding_mode
+                           and type P.T.Constant.const = Emitter.S.P.T.Constant.const
+                           and type ('s,'r,'f,'c) P.T.Extension.ccx = ('s,'r,'f,'c) Emitter.S.P.T.Extension.ccx
+                           and type ('s,'r,'f,'c) P.T.Extension.fx = ('s,'r,'f,'c) Emitter.S.P.T.Extension.fx
+                           and type ('s,'r,'f,'c) P.T.Extension.rx = ('s,'r,'f,'c) Emitter.S.P.T.Extension.rx
+                           and type ('s,'r,'f,'c) P.T.Extension.sx = ('s,'r,'f,'c) Emitter.S.P.T.Extension.sx
+                           and type P.T.I.div_rounding_mode = Emitter.S.P.T.I.div_rounding_mode
+                           and type P.T.Region.region = Emitter.S.P.T.Region.region
+                           and type P.T.ccexp = Emitter.S.P.T.ccexp
+                           and type P.T.fexp = Emitter.S.P.T.fexp
+                           (* and type P.T.labexp = Emitter.S.P.T.labexp *)
+                           and type P.T.mlrisc = Emitter.S.P.T.mlrisc
+                           and type P.T.oper = Emitter.S.P.T.oper
+                           and type P.T.rep = Emitter.S.P.T.rep
+                           and type P.T.rexp = Emitter.S.P.T.rexp
+                           and type P.T.stm = Emitter.S.P.T.stm
+     structure Jumps   : SDI_JUMPS (* where I = CFG.I *)
+                         where type I.addressing_mode = CFG.I.addressing_mode
+                           and type I.ea = CFG.I.ea
+                           and type I.instr = CFG.I.instr
+                           and type I.instruction = CFG.I.instruction
+                           and type I.operand = CFG.I.operand
+     structure Props   : INSN_PROPERTIES (* where I = CFG.I *)
+                         where type I.addressing_mode = CFG.I.addressing_mode
+                           and type I.ea = CFG.I.ea
+                           and type I.instr = CFG.I.instr
+                           and type I.instruction = CFG.I.instruction
+                           and type I.operand = CFG.I.operand
     ) = 
 struct
 

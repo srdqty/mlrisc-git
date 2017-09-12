@@ -7,7 +7,7 @@
  * -- Allen
  *)
 
-functor DirectedGraph(A : ARRAY) : 
+functor DirectedGraph(A : ARRAY_NONEQ) :
 sig include GRAPH_IMPLEMENTATION 
 
     type 'e adjlist   = 'e Graph.edge list A.array

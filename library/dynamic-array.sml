@@ -10,7 +10,7 @@
 
 structure DynArray : sig
 
-    include ARRAY
+    include ARRAY_NONEQ
 
     val fromArray : 'a Array.array * 'a * int -> 'a array
     val baseArray : 'a array -> 'a Array.array
@@ -97,6 +97,8 @@ structure DynArray : sig
    (* additional operations from Basis Library proposal 2015-003 *)
      fun toList arr = foldr (op ::) [] arr
 
+
+(*
      fun fromVector v = let
 	    val arr = A.fromVector v
 	    val default = A.sub(arr, 0)
@@ -104,6 +106,7 @@ structure DynArray : sig
 	      ARRAY(ref arr, default, ref (A.length arr))
 	    end
 	      handle _ => raise Size
+*)
 
      val toVector = vector
 

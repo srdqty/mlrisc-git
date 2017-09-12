@@ -10,7 +10,7 @@
 
 structure HashArray : sig
 
-    include ARRAY
+    include ARRAY_NONEQ
 
     val array' : int * (int -> 'a) -> 'a array
     val array'': int * (int -> 'a) -> 'a array

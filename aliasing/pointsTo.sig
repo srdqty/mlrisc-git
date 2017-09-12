@@ -7,18 +7,27 @@ signature POINTS_TO =
 sig
 
    eqtype edgekind 
-   structure C : CELLS_BASIS = CellsBasis
+   structure C : CELLS_BASIS (* = CellsBasis *)
+                 where type CellSet.cellset = CellsBasis.CellSet.cellset
+                   and type 'a ColorTable.hash_table = 'a CellsBasis.ColorTable.hash_table
+                   and type 'a HashTable.hash_table = 'a CellsBasis.HashTable.hash_table
+                   and type SortedCells.sorted_cells = CellsBasis.SortedCells.sorted_cells
+                   and type cell = CellsBasis.cell
+                   and type cellColor = CellsBasis.cellColor
+                   and type cellkind = CellsBasis.cellkind
+                   and type cellkindDesc = CellsBasis.cellkindDesc
+                   and type cellkindInfo = CellsBasis.cellkindInfo
 
    datatype cell = 
-     LINK  of region                             
-   | SREF  of C.cell * edges ref
-   | WREF  of C.cell * edges ref
-   | SCELL of C.cell * edges ref
-   | WCELL of C.cell * edges ref
+     LINK  of cell ref
+   | SREF  of C.cell * (edgekind * int * cell ref) list ref
+   | WREF  of C.cell * (edgekind * int * cell ref) list ref
+   | SCELL of C.cell * (edgekind * int * cell ref) list ref
+   | WCELL of C.cell * (edgekind * int * cell ref) list ref
    | TOP   of {mutable:bool, id:C.cell, name:string}
       (* a collapsed node *)
-   withtype region = cell ref
-   and      edges  = (edgekind * int * region) list
+   type region = cell ref
+   type edges  = (edgekind * int * region) list
 
    val reset    : (unit -> C.cell) -> unit
 

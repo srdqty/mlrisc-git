@@ -8,7 +8,7 @@ sig
 
    structure T : MLTREE
    structure C : CELLS 
-   structure I : INSTRUCTIONS where C=C
+   structure I : INSTRUCTIONS (* where C = C *)
 
    exception TooComplex
 

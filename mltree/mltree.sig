@@ -30,6 +30,10 @@ signature MLTREE = sig
    * extension type.  Unfortunately, this has to be made polymorphic to make
    * it possible for recursive type definitions to work.
    *)
+  type controlflow = Label.label list (* control flow info *)
+  type ctrl   = var                   (* control dependence info *)
+  type ctrls  = ctrl list
+
   datatype stm =
       (* assignment *)
       MV      of ty * dst * rexp
@@ -211,10 +215,7 @@ signature MLTREE = sig
     | GPR of rexp
     | FPR of fexp
 
-  withtype controlflow = Label.label list (* control flow info *)
-       and ctrl   = var                   (* control dependence info *)
-       and ctrls  = ctrl list
-       and sext   = (stm, rexp, fexp, ccexp) Extension.sx
+  withtype sext   = (stm, rexp, fexp, ccexp) Extension.sx
        and rext   = (stm, rexp, fexp, ccexp) Extension.rx
        and fext   = (stm, rexp, fexp, ccexp) Extension.fx
        and ccext  = (stm, rexp, fexp, ccexp) Extension.ccx

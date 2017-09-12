@@ -26,14 +26,31 @@
 functor BackPatch
   (structure CodeString : CODE_STRING
    structure Jumps      : SDI_JUMPS 
-   structure Props      : INSN_PROPERTIES 
-                        where I = Jumps.I
-   structure Emitter    : MC_EMIT
-                        where I = Props.I
-   structure CFG        : CONTROL_FLOW_GRAPH
-                        where I = Emitter.I
-   structure Asm        : INSTRUCTION_EMITTER
-                        where I = CFG.I) =
+   structure Props      : INSN_PROPERTIES (* where I = Jumps.I *)
+                          where type I.addressing_mode = Jumps.I.addressing_mode
+                            and type I.ea = Jumps.I.ea
+                            and type I.instr = Jumps.I.instr
+                            and type I.instruction = Jumps.I.instruction
+                            and type I.operand = Jumps.I.operand
+   structure Emitter    : MC_EMIT (* where I = Props.I *)
+                          where type I.addressing_mode = Props.I.addressing_mode
+                            and type I.ea = Props.I.ea
+                            and type I.instr = Props.I.instr
+                            and type I.instruction = Props.I.instruction
+                            and type I.operand = Props.I.operand
+   structure CFG        : CONTROL_FLOW_GRAPH (* where I = Emitter.I *)
+                          where type I.addressing_mode = Emitter.I.addressing_mode
+                            and type I.ea = Emitter.I.ea
+                            and type I.instr = Emitter.I.instr
+                            and type I.instruction = Emitter.I.instruction
+                            and type I.operand = Emitter.I.operand
+   structure Asm        : INSTRUCTION_EMITTER (* where I = CFG.I *)
+                          where type I.addressing_mode = CFG.I.addressing_mode
+                            and type I.ea = CFG.I.ea
+                            and type I.instr = CFG.I.instr
+                            and type I.instruction = CFG.I.instruction
+                            and type I.operand = CFG.I.operand
+  ) =
 struct 
   structure I   = Jumps.I
   structure C   = I.C

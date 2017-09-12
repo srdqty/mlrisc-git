@@ -6,7 +6,27 @@
 
 
 functor PPCMCEmitter(structure Instr : PPCINSTR
-                     structure MLTreeEval : MLTREE_EVAL where T = Instr.T
+                     structure MLTreeEval : MLTREE_EVAL (* where T = Instr.T *)
+                                            where type T.Basis.cond = Instr.T.Basis.cond
+                                              and type T.Basis.div_rounding_mode = Instr.T.Basis.div_rounding_mode
+                                              and type T.Basis.ext = Instr.T.Basis.ext
+                                              and type T.Basis.fcond = Instr.T.Basis.fcond
+                                              and type T.Basis.rounding_mode = Instr.T.Basis.rounding_mode
+                                              and type T.Constant.const = Instr.T.Constant.const
+                                              and type ('s,'r,'f,'c) T.Extension.ccx = ('s,'r,'f,'c) Instr.T.Extension.ccx
+                                              and type ('s,'r,'f,'c) T.Extension.fx = ('s,'r,'f,'c) Instr.T.Extension.fx
+                                              and type ('s,'r,'f,'c) T.Extension.rx = ('s,'r,'f,'c) Instr.T.Extension.rx
+                                              and type ('s,'r,'f,'c) T.Extension.sx = ('s,'r,'f,'c) Instr.T.Extension.sx
+                                              and type T.I.div_rounding_mode = Instr.T.I.div_rounding_mode
+                                              and type T.Region.region = Instr.T.Region.region
+                                              and type T.ccexp = Instr.T.ccexp
+                                              and type T.fexp = Instr.T.fexp
+                                              (* and type T.labexp = Instr.T.labexp *)
+                                              and type T.mlrisc = Instr.T.mlrisc
+                                              and type T.oper = Instr.T.oper
+                                              and type T.rep = Instr.T.rep
+                                              and type T.rexp = Instr.T.rexp
+                                              and type T.stm = Instr.T.stm
                      structure Stream : INSTRUCTION_STREAM 
                      structure CodeString : CODE_STRING
                     ) : INSTRUCTION_EMITTER =
@@ -47,6 +67,7 @@ struct
        (* note: fromLargeWord strips the high order bits! *)
        fun eByteW w =
        let val i = !loc
+           val w = W.toLargeWord w
        in loc := i + 1; CodeString.update(i,Word8.fromLargeWord w) end
    
        fun doNothing _ = ()

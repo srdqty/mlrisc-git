@@ -40,9 +40,9 @@ functor ComputeFreqsFn (
 
   (***** Representation of equations *****)
     type var = Graph.node_id
+    type term = (real * var)
+    type sum = {terms : term list, c : real}
     datatype def = Unknown | Sum of sum
-    withtype term = (real * var)
-	 and sum = {terms : term list, c : real}
 
     val zero = {c = 0.0, terms = []}
     val one = {c = 1.0, terms = []}

@@ -53,27 +53,88 @@
  * -- Allen Leung (leunga@cs.nyu.edu)
  *) 
 
-local
+functor X86FP
+   (structure X86Instr  : X86INSTR
+    structure X86Props  : INSN_PROPERTIES (* where I = X86Instr *)
+                          where type I.addressing_mode = X86Instr.addressing_mode
+                            and type I.ea = X86Instr.ea
+                            and type I.instr = X86Instr.instr
+                            and type I.instruction = X86Instr.instruction
+                            and type I.operand = X86Instr.operand
+    structure Flowgraph : CONTROL_FLOW_GRAPH (* where I = X86Instr *)
+                          where type I.addressing_mode = X86Instr.addressing_mode
+                            and type I.ea = X86Instr.ea
+                            and type I.instr = X86Instr.instr
+                            and type I.instruction = X86Instr.instruction
+                            and type I.operand = X86Instr.operand
+    structure Liveness  : LIVENESS (* where CFG = Flowgraph *)
+                          where type CFG.I.addressing_mode = Flowgraph.I.addressing_mode
+                            and type CFG.I.ea = Flowgraph.I.ea
+                            and type CFG.I.instr = Flowgraph.I.instr
+                            and type CFG.I.instruction = Flowgraph.I.instruction
+                            and type CFG.I.operand = Flowgraph.I.operand
+                            and type CFG.P.Client.pseudo_op = Flowgraph.P.Client.pseudo_op
+                            and type CFG.P.T.Basis.cond = Flowgraph.P.T.Basis.cond
+                            and type CFG.P.T.Basis.div_rounding_mode = Flowgraph.P.T.Basis.div_rounding_mode
+                            and type CFG.P.T.Basis.ext = Flowgraph.P.T.Basis.ext
+                            and type CFG.P.T.Basis.fcond = Flowgraph.P.T.Basis.fcond
+                            and type CFG.P.T.Basis.rounding_mode = Flowgraph.P.T.Basis.rounding_mode
+                            and type CFG.P.T.Constant.const = Flowgraph.P.T.Constant.const
+                            and type ('s,'r,'f,'c) CFG.P.T.Extension.ccx = ('s,'r,'f,'c) Flowgraph.P.T.Extension.ccx
+                            and type ('s,'r,'f,'c) CFG.P.T.Extension.fx = ('s,'r,'f,'c) Flowgraph.P.T.Extension.fx
+                            and type ('s,'r,'f,'c) CFG.P.T.Extension.rx = ('s,'r,'f,'c) Flowgraph.P.T.Extension.rx
+                            and type ('s,'r,'f,'c) CFG.P.T.Extension.sx = ('s,'r,'f,'c) Flowgraph.P.T.Extension.sx
+                            and type CFG.P.T.I.div_rounding_mode = Flowgraph.P.T.I.div_rounding_mode
+                            and type CFG.P.T.Region.region = Flowgraph.P.T.Region.region
+                            and type CFG.P.T.ccexp = Flowgraph.P.T.ccexp
+                            and type CFG.P.T.fexp = Flowgraph.P.T.fexp
+                            (* and type CFG.P.T.labexp = Flowgraph.P.T.labexp *)
+                            and type CFG.P.T.mlrisc = Flowgraph.P.T.mlrisc
+                            and type CFG.P.T.oper = Flowgraph.P.T.oper
+                            and type CFG.P.T.rep = Flowgraph.P.T.rep
+                            and type CFG.P.T.rexp = Flowgraph.P.T.rexp
+                            and type CFG.P.T.stm = Flowgraph.P.T.stm
+                            and type CFG.block = Flowgraph.block
+                            and type CFG.block_kind = Flowgraph.block_kind
+                            and type CFG.edge_info = Flowgraph.edge_info
+                            and type CFG.edge_kind = Flowgraph.edge_kind
+                            and type CFG.info = Flowgraph.info
+    structure Asm       : INSTRUCTION_EMITTER (* where I = X86Instr and S.P = Flowgraph.P *)
+                          where type I.addressing_mode = X86Instr.addressing_mode
+                            and type I.ea = X86Instr.ea
+                            and type I.instr = X86Instr.instr
+                            and type I.instruction = X86Instr.instruction
+                            and type I.operand = X86Instr.operand
+                          where type S.P.Client.pseudo_op = Flowgraph.P.Client.pseudo_op
+                            and type S.P.T.Basis.cond = Flowgraph.P.T.Basis.cond
+                            and type S.P.T.Basis.div_rounding_mode = Flowgraph.P.T.Basis.div_rounding_mode
+                            and type S.P.T.Basis.ext = Flowgraph.P.T.Basis.ext
+                            and type S.P.T.Basis.fcond = Flowgraph.P.T.Basis.fcond
+                            and type S.P.T.Basis.rounding_mode = Flowgraph.P.T.Basis.rounding_mode
+                            and type S.P.T.Constant.const = Flowgraph.P.T.Constant.const
+                            and type ('s,'r,'f,'c) S.P.T.Extension.ccx = ('s,'r,'f,'c) Flowgraph.P.T.Extension.ccx
+                            and type ('s,'r,'f,'c) S.P.T.Extension.fx = ('s,'r,'f,'c) Flowgraph.P.T.Extension.fx
+                            and type ('s,'r,'f,'c) S.P.T.Extension.rx = ('s,'r,'f,'c) Flowgraph.P.T.Extension.rx
+                            and type ('s,'r,'f,'c) S.P.T.Extension.sx = ('s,'r,'f,'c) Flowgraph.P.T.Extension.sx
+                            and type S.P.T.I.div_rounding_mode = Flowgraph.P.T.I.div_rounding_mode
+                            and type S.P.T.Region.region = Flowgraph.P.T.Region.region
+                            and type S.P.T.ccexp = Flowgraph.P.T.ccexp
+                            and type S.P.T.fexp = Flowgraph.P.T.fexp
+                            (* and type S.P.T.labexp = Flowgraph.P.T.labexp *)
+                            and type S.P.T.mlrisc = Flowgraph.P.T.mlrisc
+                            and type S.P.T.oper = Flowgraph.P.T.oper
+                            and type S.P.T.rep = Flowgraph.P.T.rep
+                            and type S.P.T.rexp = Flowgraph.P.T.rexp
+                            and type S.P.T.stm = Flowgraph.P.T.stm
+   ) : CFG_OPTIMIZATION =
+struct
    val debug = false         (* set this to true to debug this module 
                               * set this to false for production use.
                               *) 
    val debugLiveness = true (* debug liveness analysis *)
    val debugDead = false     (* debug dead code removal *)
    val sanityCheck = true
-in
-functor X86FP
-   (structure X86Instr  : X86INSTR
-    structure X86Props  : INSN_PROPERTIES 
-			      where I = X86Instr
-    structure Flowgraph : CONTROL_FLOW_GRAPH
-			      where I = X86Instr
-    structure Liveness  : LIVENESS 
-			      where CFG = Flowgraph
-    structure Asm       : INSTRUCTION_EMITTER 
-			      where I = X86Instr
-				and S.P = Flowgraph.P
-   ) : CFG_OPTIMIZATION = 
-struct
+
    structure CFG = Flowgraph
    structure G  = Graph
    structure I  = X86Instr
@@ -1670,5 +1731,3 @@ struct
        else repairCriticalEdges(Cfg)
    end 
 end (* functor *)
-
-end (* local *)

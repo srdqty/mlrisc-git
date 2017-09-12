@@ -109,13 +109,45 @@
 
 functor X86RA 
   ( structure I          : X86INSTR
-    structure InsnProps  : INSN_PROPERTIES 
-			       where I = I
-    structure CFG        : CONTROL_FLOW_GRAPH 
-			       where I = I
-    structure Asm        : INSTRUCTION_EMITTER 
-			       where I = I 
-				 and S.P = CFG.P
+    structure InsnProps  : INSN_PROPERTIES (* where I = I *)
+                           where type I.addressing_mode = I.addressing_mode
+                             and type I.ea = I.ea
+                             and type I.instr = I.instr
+                             and type I.instruction = I.instruction
+                             and type I.operand = I.operand
+    structure CFG        : CONTROL_FLOW_GRAPH (* where I = I *)
+                           where type I.addressing_mode = I.addressing_mode
+                             and type I.ea = I.ea
+                             and type I.instr = I.instr
+                             and type I.instruction = I.instruction
+                             and type I.operand = I.operand
+    structure Asm        : INSTRUCTION_EMITTER (* where I = I and S.P = CFG.P *)
+                           where type I.addressing_mode = I.addressing_mode
+                             and type I.ea = I.ea
+                             and type I.instr = I.instr
+                             and type I.instruction = I.instruction
+                             and type I.operand = I.operand
+                           where type S.P.Client.pseudo_op = CFG.P.Client.pseudo_op
+                             and type S.P.T.Basis.cond = CFG.P.T.Basis.cond
+                             and type S.P.T.Basis.div_rounding_mode = CFG.P.T.Basis.div_rounding_mode
+                             and type S.P.T.Basis.ext = CFG.P.T.Basis.ext
+                             and type S.P.T.Basis.fcond = CFG.P.T.Basis.fcond
+                             and type S.P.T.Basis.rounding_mode = CFG.P.T.Basis.rounding_mode
+                             and type S.P.T.Constant.const = CFG.P.T.Constant.const
+                             and type ('s,'r,'f,'c) S.P.T.Extension.ccx = ('s,'r,'f,'c) CFG.P.T.Extension.ccx
+                             and type ('s,'r,'f,'c) S.P.T.Extension.fx = ('s,'r,'f,'c) CFG.P.T.Extension.fx
+                             and type ('s,'r,'f,'c) S.P.T.Extension.rx = ('s,'r,'f,'c) CFG.P.T.Extension.rx
+                             and type ('s,'r,'f,'c) S.P.T.Extension.sx = ('s,'r,'f,'c) CFG.P.T.Extension.sx
+                             and type S.P.T.I.div_rounding_mode = CFG.P.T.I.div_rounding_mode
+                             and type S.P.T.Region.region = CFG.P.T.Region.region
+                             and type S.P.T.ccexp = CFG.P.T.ccexp
+                             and type S.P.T.fexp = CFG.P.T.fexp
+                             (* and type S.P.T.labexp = CFG.P.T.labexp *)
+                             and type S.P.T.mlrisc = CFG.P.T.mlrisc
+                             and type S.P.T.oper = CFG.P.T.oper
+                             and type S.P.T.rep = CFG.P.T.rep
+                             and type S.P.T.rexp = CFG.P.T.rexp
+                             and type S.P.T.stm = CFG.P.T.stm
 
       (* Spilling heuristics determines which node should be spilled 
        * You can use Chaitin, ChowHenessey, or one of your own.
@@ -126,7 +158,12 @@ functor X86RA
        * spill code.  You can use RASpill, or RASpillWithRenaming,
        * or write your own if you are feeling adventurous.
        *)
-    structure Spill : RA_SPILL where I = I 
+    structure Spill : RA_SPILL (* where I = I *)
+                      where type I.addressing_mode = I.addressing_mode
+                        and type I.ea = I.ea
+                        and type I.instr = I.instr
+                        and type I.instruction = I.instruction
+                        and type I.operand = I.operand
 
 
     type spill_info (* user-defined abstract type *)
@@ -304,17 +341,16 @@ struct
     (* This is the generic register allocator *)
     structure Ra = 
       RegisterAllocator
-       (SpillHeur)
-       (MemoryRA             (* for memory coalescing *)
+       (structure SpillHeuristics = SpillHeur
+        structure Flowgraph = MemoryRA             (* for memory coalescing *)
          (RADeadCodeElim     (* do the funky dead code elimination stuff *)
-            (ClusterRA
+            (structure Flowgraph = ClusterRA
                (structure Flowgraph = CFG
                 structure Asm = Asm
                 structure InsnProps = InsnProps
                 structure Spill = Spill
                )
-            )
-            (fun cellkind CB.GP = true | cellkind _ = false
+             fun cellkind CB.GP = true | cellkind _ = false
              val deadRegs = deadRegs
              val affectedBlocks = affectedBlocks
              val spillInit = spillInit

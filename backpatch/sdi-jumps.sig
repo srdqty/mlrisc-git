@@ -7,7 +7,7 @@
 signature SDI_JUMPS = sig
   structure I : INSTRUCTIONS
   structure C : CELLS
-    sharing I.C = C
+    (* sharing I.C = C *)
 
   val branchDelayedArch : bool
 

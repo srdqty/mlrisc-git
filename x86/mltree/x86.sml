@@ -32,19 +32,77 @@
  *
  * -- Allen
  *)
-local
-   val rewriteMemReg = true (* should we rewrite memRegs *)
-   val enableFastFPMode = true (* set this to false to disable the mode *)
-in
 
 functor X86
   (structure X86Instr : X86INSTR
-   structure MLTreeUtils : MLTREE_UTILS
-			where T = X86Instr.T
-   structure ExtensionComp : MLTREE_EXTENSION_COMP
-     			where I = X86Instr and T = X86Instr.T
-   structure MLTreeStream : MLTREE_STREAM
-			where T = ExtensionComp.T
+   structure MLTreeUtils : MLTREE_UTILS (* where T = X86Instr.T *)
+                           where type T.Basis.cond = X86Instr.T.Basis.cond
+                             and type T.Basis.div_rounding_mode = X86Instr.T.Basis.div_rounding_mode
+                             and type T.Basis.ext = X86Instr.T.Basis.ext
+                             and type T.Basis.fcond = X86Instr.T.Basis.fcond
+                             and type T.Basis.rounding_mode = X86Instr.T.Basis.rounding_mode
+                             and type T.Constant.const = X86Instr.T.Constant.const
+                             and type ('s,'r,'f,'c) T.Extension.ccx = ('s,'r,'f,'c) X86Instr.T.Extension.ccx
+                             and type ('s,'r,'f,'c) T.Extension.fx = ('s,'r,'f,'c) X86Instr.T.Extension.fx
+                             and type ('s,'r,'f,'c) T.Extension.rx = ('s,'r,'f,'c) X86Instr.T.Extension.rx
+                             and type ('s,'r,'f,'c) T.Extension.sx = ('s,'r,'f,'c) X86Instr.T.Extension.sx
+                             and type T.I.div_rounding_mode = X86Instr.T.I.div_rounding_mode
+                             and type T.Region.region = X86Instr.T.Region.region
+                             and type T.ccexp = X86Instr.T.ccexp
+                             and type T.fexp = X86Instr.T.fexp
+                             (* and type T.labexp = X86Instr.T.labexp *)
+                             and type T.mlrisc = X86Instr.T.mlrisc
+                             and type T.oper = X86Instr.T.oper
+                             and type T.rep = X86Instr.T.rep
+                             and type T.rexp = X86Instr.T.rexp
+                             and type T.stm = X86Instr.T.stm
+   structure ExtensionComp : MLTREE_EXTENSION_COMP (* where I = X86Instr and T = X86Instr.T *)
+                             where type I.addressing_mode = X86Instr.addressing_mode
+                               and type I.ea = X86Instr.ea
+                               and type I.instr = X86Instr.instr
+                               and type I.instruction = X86Instr.instruction
+                               and type I.operand = X86Instr.operand
+                             where type T.Basis.cond = X86Instr.T.Basis.cond
+                               and type T.Basis.div_rounding_mode = X86Instr.T.Basis.div_rounding_mode
+                               and type T.Basis.ext = X86Instr.T.Basis.ext
+                               and type T.Basis.fcond = X86Instr.T.Basis.fcond
+                               and type T.Basis.rounding_mode = X86Instr.T.Basis.rounding_mode
+                               and type T.Constant.const = X86Instr.T.Constant.const
+                               and type ('s,'r,'f,'c) T.Extension.ccx = ('s,'r,'f,'c) X86Instr.T.Extension.ccx
+                               and type ('s,'r,'f,'c) T.Extension.fx = ('s,'r,'f,'c) X86Instr.T.Extension.fx
+                               and type ('s,'r,'f,'c) T.Extension.rx = ('s,'r,'f,'c) X86Instr.T.Extension.rx
+                               and type ('s,'r,'f,'c) T.Extension.sx = ('s,'r,'f,'c) X86Instr.T.Extension.sx
+                               and type T.I.div_rounding_mode = X86Instr.T.I.div_rounding_mode
+                               and type T.Region.region = X86Instr.T.Region.region
+                               and type T.ccexp = X86Instr.T.ccexp
+                               and type T.fexp = X86Instr.T.fexp
+                               (* and type T.labexp = X86Instr.T.labexp *)
+                               and type T.mlrisc = X86Instr.T.mlrisc
+                               and type T.oper = X86Instr.T.oper
+                               and type T.rep = X86Instr.T.rep
+                               and type T.rexp = X86Instr.T.rexp
+                               and type T.stm = X86Instr.T.stm
+   structure MLTreeStream : MLTREE_STREAM (* where T = ExtensionComp.T *)
+                            where type T.Basis.cond = ExtensionComp.T.Basis.cond
+                              and type T.Basis.div_rounding_mode = ExtensionComp.T.Basis.div_rounding_mode
+                              and type T.Basis.ext = ExtensionComp.T.Basis.ext
+                              and type T.Basis.fcond = ExtensionComp.T.Basis.fcond
+                              and type T.Basis.rounding_mode = ExtensionComp.T.Basis.rounding_mode
+                              and type T.Constant.const = ExtensionComp.T.Constant.const
+                              and type ('s,'r,'f,'c) T.Extension.ccx = ('s,'r,'f,'c) ExtensionComp.T.Extension.ccx
+                              and type ('s,'r,'f,'c) T.Extension.fx = ('s,'r,'f,'c) ExtensionComp.T.Extension.fx
+                              and type ('s,'r,'f,'c) T.Extension.rx = ('s,'r,'f,'c) ExtensionComp.T.Extension.rx
+                              and type ('s,'r,'f,'c) T.Extension.sx = ('s,'r,'f,'c) ExtensionComp.T.Extension.sx
+                              and type T.I.div_rounding_mode = ExtensionComp.T.I.div_rounding_mode
+                              and type T.Region.region = ExtensionComp.T.Region.region
+                              and type T.ccexp = ExtensionComp.T.ccexp
+                              and type T.fexp = ExtensionComp.T.fexp
+                              (* and type T.labexp = ExtensionComp.T.labexp *)
+                              and type T.mlrisc = ExtensionComp.T.mlrisc
+                              and type T.oper = ExtensionComp.T.oper
+                              and type T.rep = ExtensionComp.T.rep
+                              and type T.rexp = ExtensionComp.T.rexp
+                              and type T.stm = ExtensionComp.T.stm
     datatype arch = Pentium | PentiumPro | PentiumII | PentiumIII
     val arch : arch ref
     val cvti2f :
@@ -65,6 +123,9 @@ functor X86
           val rewriteMemReg : bool
       end =
 struct
+  val rewriteMemReg = true (* should we rewrite memRegs *)
+  val enableFastFPMode = true (* set this to false to disable the mode *)
+
   structure I = X86Instr
   structure T = I.T
   structure TS = ExtensionComp.TS
@@ -2011,5 +2072,3 @@ struct
   end
 
 end (* functor *)
-
-end (* local *)

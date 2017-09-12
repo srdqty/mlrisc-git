@@ -5,8 +5,48 @@
 
 functor PPCProps
    ( structure PPCInstr : PPCINSTR
-     structure MLTreeEval : MLTREE_EVAL where T = PPCInstr.T
-     structure MLTreeHash : MLTREE_HASH where T = PPCInstr.T
+     structure MLTreeEval : MLTREE_EVAL (* where T = PPCInstr.T *)
+                            where type T.Basis.cond = PPCInstr.T.Basis.cond
+                              and type T.Basis.div_rounding_mode = PPCInstr.T.Basis.div_rounding_mode
+                              and type T.Basis.ext = PPCInstr.T.Basis.ext
+                              and type T.Basis.fcond = PPCInstr.T.Basis.fcond
+                              and type T.Basis.rounding_mode = PPCInstr.T.Basis.rounding_mode
+                              and type T.Constant.const = PPCInstr.T.Constant.const
+                              and type ('s,'r,'f,'c) T.Extension.ccx = ('s,'r,'f,'c) PPCInstr.T.Extension.ccx
+                              and type ('s,'r,'f,'c) T.Extension.fx = ('s,'r,'f,'c) PPCInstr.T.Extension.fx
+                              and type ('s,'r,'f,'c) T.Extension.rx = ('s,'r,'f,'c) PPCInstr.T.Extension.rx
+                              and type ('s,'r,'f,'c) T.Extension.sx = ('s,'r,'f,'c) PPCInstr.T.Extension.sx
+                              and type T.I.div_rounding_mode = PPCInstr.T.I.div_rounding_mode
+                              and type T.Region.region = PPCInstr.T.Region.region
+                              and type T.ccexp = PPCInstr.T.ccexp
+                              and type T.fexp = PPCInstr.T.fexp
+                              (* and type T.labexp = PPCInstr.T.labexp *)
+                              and type T.mlrisc = PPCInstr.T.mlrisc
+                              and type T.oper = PPCInstr.T.oper
+                              and type T.rep = PPCInstr.T.rep
+                              and type T.rexp = PPCInstr.T.rexp
+                              and type T.stm = PPCInstr.T.stm
+     structure MLTreeHash : MLTREE_HASH (* where T = PPCInstr.T *)
+                            where type T.Basis.cond = PPCInstr.T.Basis.cond
+                              and type T.Basis.div_rounding_mode = PPCInstr.T.Basis.div_rounding_mode
+                              and type T.Basis.ext = PPCInstr.T.Basis.ext
+                              and type T.Basis.fcond = PPCInstr.T.Basis.fcond
+                              and type T.Basis.rounding_mode = PPCInstr.T.Basis.rounding_mode
+                              and type T.Constant.const = PPCInstr.T.Constant.const
+                              and type ('s,'r,'f,'c) T.Extension.ccx = ('s,'r,'f,'c) PPCInstr.T.Extension.ccx
+                              and type ('s,'r,'f,'c) T.Extension.fx = ('s,'r,'f,'c) PPCInstr.T.Extension.fx
+                              and type ('s,'r,'f,'c) T.Extension.rx = ('s,'r,'f,'c) PPCInstr.T.Extension.rx
+                              and type ('s,'r,'f,'c) T.Extension.sx = ('s,'r,'f,'c) PPCInstr.T.Extension.sx
+                              and type T.I.div_rounding_mode = PPCInstr.T.I.div_rounding_mode
+                              and type T.Region.region = PPCInstr.T.Region.region
+                              and type T.ccexp = PPCInstr.T.ccexp
+                              and type T.fexp = PPCInstr.T.fexp
+                              (* and type T.labexp = PPCInstr.T.labexp *)
+                              and type T.mlrisc = PPCInstr.T.mlrisc
+                              and type T.oper = PPCInstr.T.oper
+                              and type T.rep = PPCInstr.T.rep
+                              and type T.rexp = PPCInstr.T.rexp
+                              and type T.stm = PPCInstr.T.stm
     ) : INSN_PROPERTIES = 
 struct
   structure I = PPCInstr

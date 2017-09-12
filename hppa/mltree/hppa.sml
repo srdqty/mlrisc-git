@@ -14,14 +14,106 @@
 
 functor Hppa
   (structure HppaInstr : HPPAINSTR
-   structure ExtensionComp : MLTREE_EXTENSION_COMP
-      		where I = HppaInstr 
-		  and T = HppaInstr.T
-   structure MilliCode : HPPA_MILLICODE
-      		where I = HppaInstr
-   structure LabelComp : LABEL_COMP 
-   		where I = HppaInstr  
-		  and T = HppaInstr.T
+   structure ExtensionComp : MLTREE_EXTENSION_COMP (* where I = HppaInstr and T = HppaInstr.T *)
+                             where type I.addressing_mode = HppaInstr.addressing_mode
+                               and type I.ea = HppaInstr.ea
+                               and type I.instr = HppaInstr.instr
+                               and type I.instruction = HppaInstr.instruction
+                               and type I.operand = HppaInstr.operand
+                             where type T.Basis.cond = HppaInstr.T.Basis.cond
+                               and type T.Basis.div_rounding_mode = HppaInstr.T.Basis.div_rounding_mode
+                               and type T.Basis.ext = HppaInstr.T.Basis.ext
+                               and type T.Basis.fcond = HppaInstr.T.Basis.fcond
+                               and type T.Basis.rounding_mode = HppaInstr.T.Basis.rounding_mode
+                               and type T.Constant.const = HppaInstr.T.Constant.const
+                               and type ('s,'r,'f,'c) T.Extension.ccx = ('s,'r,'f,'c) HppaInstr.T.Extension.ccx
+                               and type ('s,'r,'f,'c) T.Extension.fx = ('s,'r,'f,'c) HppaInstr.T.Extension.fx
+                               and type ('s,'r,'f,'c) T.Extension.rx = ('s,'r,'f,'c) HppaInstr.T.Extension.rx
+                               and type ('s,'r,'f,'c) T.Extension.sx = ('s,'r,'f,'c) HppaInstr.T.Extension.sx
+                               and type T.I.div_rounding_mode = HppaInstr.T.I.div_rounding_mode
+                               and type T.Region.region = HppaInstr.T.Region.region
+                               and type T.ccexp = HppaInstr.T.ccexp
+                               and type T.fexp = HppaInstr.T.fexp
+                               (* and type T.labexp = HppaInstr.T.labexp *)
+                               and type T.mlrisc = HppaInstr.T.mlrisc
+                               and type T.oper = HppaInstr.T.oper
+                               and type T.rep = HppaInstr.T.rep
+                               and type T.rexp = HppaInstr.T.rexp
+                               and type T.stm = HppaInstr.T.stm
+   structure MilliCode : HPPA_MILLICODE (* where I = HppaInstr *)
+                         where type I.Constant.const = HppaInstr.Constant.const
+                           and type I.Region.region = HppaInstr.Region.region
+                           and type I.T.Basis.cond = HppaInstr.T.Basis.cond
+                           and type I.T.Basis.div_rounding_mode = HppaInstr.T.Basis.div_rounding_mode
+                           and type I.T.Basis.ext = HppaInstr.T.Basis.ext
+                           and type I.T.Basis.fcond = HppaInstr.T.Basis.fcond
+                           and type I.T.Basis.rounding_mode = HppaInstr.T.Basis.rounding_mode
+                           and type ('s,'r,'f,'c) I.T.Extension.ccx = ('s,'r,'f,'c) HppaInstr.T.Extension.ccx
+                           and type ('s,'r,'f,'c) I.T.Extension.fx = ('s,'r,'f,'c) HppaInstr.T.Extension.fx
+                           and type ('s,'r,'f,'c) I.T.Extension.rx = ('s,'r,'f,'c) HppaInstr.T.Extension.rx
+                           and type ('s,'r,'f,'c) I.T.Extension.sx = ('s,'r,'f,'c) HppaInstr.T.Extension.sx
+                           and type I.T.I.div_rounding_mode = HppaInstr.T.I.div_rounding_mode
+                           and type I.T.ccexp = HppaInstr.T.ccexp
+                           and type I.T.fexp = HppaInstr.T.fexp
+                           (* and type I.T.labexp = HppaInstr.T.labexp *)
+                           and type I.T.mlrisc = HppaInstr.T.mlrisc
+                           and type I.T.oper = HppaInstr.T.oper
+                           and type I.T.rep = HppaInstr.T.rep
+                           and type I.T.rexp = HppaInstr.T.rexp
+                           and type I.T.stm = HppaInstr.T.stm
+                           and type I.addressing_mode = HppaInstr.addressing_mode
+                           and type I.arith = HppaInstr.arith
+                           and type I.arithi = HppaInstr.arithi
+                           and type I.bcond = HppaInstr.bcond
+                           and type I.bitcond = HppaInstr.bitcond
+                           and type I.cmp = HppaInstr.cmp
+                           and type I.cmpi = HppaInstr.cmpi
+                           and type I.ea = HppaInstr.ea
+                           and type I.farith = HppaInstr.farith
+                           and type I.fcnv = HppaInstr.fcnv
+                           and type I.fcond = HppaInstr.fcond
+                           and type I.field_selector = HppaInstr.field_selector
+                           and type I.fload = HppaInstr.fload
+                           and type I.floadx = HppaInstr.floadx
+                           and type I.fmt = HppaInstr.fmt
+                           and type I.fstore = HppaInstr.fstore
+                           and type I.fstorex = HppaInstr.fstorex
+                           and type I.funary = HppaInstr.funary
+                           and type I.instr = HppaInstr.instr
+                           and type I.instruction = HppaInstr.instruction
+                           and type I.load = HppaInstr.load
+                           and type I.loadi = HppaInstr.loadi
+                           and type I.operand = HppaInstr.operand
+                           and type I.scond = HppaInstr.scond
+                           and type I.shift = HppaInstr.shift
+                           and type I.shiftv = HppaInstr.shiftv
+                           and type I.store = HppaInstr.store
+   structure LabelComp : LABEL_COMP (* where I = HppaInstr and T = HppaInstr.T *)
+                         where type I.addressing_mode = HppaInstr.addressing_mode
+                           and type I.ea = HppaInstr.ea
+                           and type I.instr = HppaInstr.instr
+                           and type I.instruction = HppaInstr.instruction
+                           and type I.operand = HppaInstr.operand
+                         where type T.Basis.cond = HppaInstr.T.Basis.cond
+                           and type T.Basis.div_rounding_mode = HppaInstr.T.Basis.div_rounding_mode
+                           and type T.Basis.ext = HppaInstr.T.Basis.ext
+                           and type T.Basis.fcond = HppaInstr.T.Basis.fcond
+                           and type T.Basis.rounding_mode = HppaInstr.T.Basis.rounding_mode
+                           and type T.Constant.const = HppaInstr.T.Constant.const
+                           and type ('s,'r,'f,'c) T.Extension.ccx = ('s,'r,'f,'c) HppaInstr.T.Extension.ccx
+                           and type ('s,'r,'f,'c) T.Extension.fx = ('s,'r,'f,'c) HppaInstr.T.Extension.fx
+                           and type ('s,'r,'f,'c) T.Extension.rx = ('s,'r,'f,'c) HppaInstr.T.Extension.rx
+                           and type ('s,'r,'f,'c) T.Extension.sx = ('s,'r,'f,'c) HppaInstr.T.Extension.sx
+                           and type T.I.div_rounding_mode = HppaInstr.T.I.div_rounding_mode
+                           and type T.Region.region = HppaInstr.T.Region.region
+                           and type T.ccexp = HppaInstr.T.ccexp
+                           and type T.fexp = HppaInstr.T.fexp
+                           (* and type T.labexp = HppaInstr.T.labexp *)
+                           and type T.mlrisc = HppaInstr.T.mlrisc
+                           and type T.oper = HppaInstr.T.oper
+                           and type T.rep = HppaInstr.T.rep
+                           and type T.rexp = HppaInstr.T.rexp
+                           and type T.stm = HppaInstr.T.stm
    val costOfMultiply : int ref
    val costOfDivision : int ref
   ) : MLTREECOMP =
@@ -52,8 +144,8 @@ struct
    fun mkfcopy{dst, src, tmp} =
        I.COPY{k=CB.FP, sz=64, dst=dst, src=src, tmp=tmp}
    structure W = Word32
-   functor Multiply32 = MLTreeMult
-    (structure I = I
+   structure Multiply32 = struct
+     structure I = I
      structure T = T
      structure CB = CB
      val intTy = 32
@@ -65,11 +157,12 @@ struct
      fun slli{r,i,d} = [I.shift{s=I.ZDEP,r=r,p=31-i,len=32-i,t=d}]
      fun srli{r,i,d} = [I.shift{s=I.EXTRU,r=r,p=31-i,len=32-i,t=d}]
      fun srai{r,i,d} = [I.shift{s=I.EXTRS,r=r,p=31-i,len=32-i,t=d}]
-    )
+   end
 
    (* signed, trapping version of multiply and divide *)
-   structure Mult32 = Multiply32
-    (val trapping = true
+   structure Mult32 = MLTreeMult
+    (open Multiply32
+     val trapping = true
      val multCost = costOfMultiply
      val divCost  = costOfDivision
      fun addv{r1,r2,d} = [I.arith{a=I.ADDO,r1=r1,r2=r2,t=d}]
@@ -77,12 +170,13 @@ struct
      val sh1addv = SOME(fn{r1,r2,d} => [I.arith{a=I.SH1ADDO,r1=r1,r2=r2,t=d}])
      val sh2addv = SOME(fn{r1,r2,d} => [I.arith{a=I.SH2ADDO,r1=r1,r2=r2,t=d}])
      val sh3addv = SOME(fn{r1,r2,d} => [I.arith{a=I.SH3ADDO,r1=r1,r2=r2,t=d}])
-    )
-    (val signed = true)
+
+     val signed = true)
 
    (* unsigned, non-trapping version of multiply and divide *)
-   structure Mulu32 = Multiply32
-    (val trapping = false
+   structure Mulu32 = MLTreeMult
+    (open Multiply32
+     val trapping = false
      val multCost = costOfMultiply
      val divCost  = costOfDivision
      fun addv{r1,r2,d} = [I.arith{a=I.ADD,r1=r1,r2=r2,t=d}]
@@ -90,12 +184,13 @@ struct
      val sh1addv = SOME(fn{r1,r2,d} => [I.arith{a=I.SH1ADDL,r1=r1,r2=r2,t=d}])
      val sh2addv = SOME(fn{r1,r2,d} => [I.arith{a=I.SH2ADDL,r1=r1,r2=r2,t=d}])
      val sh3addv = SOME(fn{r1,r2,d} => [I.arith{a=I.SH3ADDL,r1=r1,r2=r2,t=d}])
-    )
-    (val signed   = false)
+
+     val signed   = false)
 
    (* signed, non-trapping version of multiply and divide *)
-   structure Muls32 = Multiply32
-    (val trapping = false
+   structure Muls32 = MLTreeMult
+    (open Multiply32
+     val trapping = false
      val multCost = costOfMultiply
      val divCost  = costOfDivision
      fun addv{r1,r2,d} = [I.arith{a=I.ADD,r1=r1,r2=r2,t=d}]
@@ -103,8 +198,8 @@ struct
      val sh1addv = SOME(fn{r1,r2,d} => [I.arith{a=I.SH1ADDL,r1=r1,r2=r2,t=d}])
      val sh2addv = SOME(fn{r1,r2,d} => [I.arith{a=I.SH2ADDL,r1=r1,r2=r2,t=d}])
      val sh3addv = SOME(fn{r1,r2,d} => [I.arith{a=I.SH3ADDL,r1=r1,r2=r2,t=d}])
-    )
-    (val signed   = true)
+
+     val signed   = true)
 
    fun error msg = MLRiscErrorMsg.error("Hppa",msg)
 
